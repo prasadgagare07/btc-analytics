@@ -1,3 +1,6 @@
+const { processTrade } =
+require("../services/tradeCollector");
+
 const WebSocket = require("ws");
 
 let ws = null;
