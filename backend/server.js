@@ -29,6 +29,8 @@ app.get("*", (req, res) => {
     res.sendFile(path.join(__dirname, "../frontend/index.html"));
 });
 
+connectBinance();
+
 app.listen(PORT, () => {
     console.log("==================================");
     console.log("BTC Analytics Server Started");
