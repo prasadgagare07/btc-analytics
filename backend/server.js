@@ -4,6 +4,8 @@ const express = require("express");
 const cors = require("cors");
 const path = require("path");
 
+const { connectBinance } = require("./websocket/binanceSocket");
+
 const app = express();
 
 const PORT = process.env.PORT || 10000;
