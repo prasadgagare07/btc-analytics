@@ -10,7 +10,7 @@ const marketState = {
     tradeCount: 0,
 
     largestBuy: 0,
-    largestSell: 0
+    largestSell: 0,
 
     bestBid: 0,
 bestAsk: 0,
