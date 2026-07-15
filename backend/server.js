@@ -8,6 +8,7 @@ const cors = require("cors");
 const path = require("path");
 
 const { connectBinance } = require("./websocket/binanceSocket");
+const { updateCandle, getCandles } = require("./engine/candleEngine");
 
 const app = express();
 
@@ -30,6 +31,11 @@ app.get("/api/market",(req,res)=>{
 res.json(marketState);
 
 });
+
+app.get("/api/candles", (req, res) => {
+    res.json(getCandles());
+});
+
 // Serve Frontend
 app.use(express.static(path.join(__dirname, "../frontend")));
 
@@ -38,6 +44,10 @@ app.get("*", (req, res) => {
 });
 
 connectBinance();
+
+setInterval(() => {
+    updateCandle(marketState);
+}, 1000);
 
 app.listen(PORT, () => {
     console.log("==================================");
