@@ -16,13 +16,13 @@ function connectBinance() {
         console.log("Connected to Binance WebSocket");
     });
 
-    ws.on("message", (message) => {
-        const trade = JSON.parse(message);
+    ws.on("message",(message)=>{
 
-        console.log(
-            `Price: ${trade.p} | Qty: ${trade.q} | BuyerMaker: ${trade.m}`
-        );
-    });
+const trade=JSON.parse(message);
+
+processTrade(trade);
+
+});
 
     ws.on("close", () => {
         console.log("Binance disconnected. Reconnecting in 5 seconds...");
