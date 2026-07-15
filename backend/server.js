@@ -1,3 +1,6 @@
+const marketState =
+require("./data/marketState");
+
 require("dotenv").config();
 
 const express = require("express");
@@ -22,6 +25,11 @@ app.get("/api/status", (req, res) => {
     });
 });
 
+app.get("/api/market",(req,res)=>{
+
+res.json(marketState);
+
+});
 // Serve Frontend
 app.use(express.static(path.join(__dirname, "../frontend")));
 
