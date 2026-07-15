@@ -1,6 +1,6 @@
 const { processTrade } =
 require("../services/tradeCollector");
-
+const { processBookTicker } = require("../services/orderBookCollector");
 const WebSocket = require("ws");
 
 let ws = null;
@@ -9,18 +9,28 @@ function connectBinance() {
     console.log("Connecting to Binance...");
 
     ws = new WebSocket(
-        "wss://stream.binance.com:9443/ws/btcusdt@trade"
+        "wss://stream.binance.com:9443/stream?streams=btcusdt@trade/btcusdt@bookTicker"
     );
+
+    
 
     ws.on("open", () => {
         console.log("Connected to Binance WebSocket");
     });
 
-    ws.on("message",(message)=>{
+    ws.on("message", (message) => {
 
-const trade=JSON.parse(message);
+    const msg = JSON.parse(message);
 
-processTrade(trade);
+    if (!msg.stream) return;
+
+    if (msg.stream.includes("@trade")) {
+        processTrade(msg.data);
+    }
+
+    if (msg.stream.includes("@bookTicker")) {
+        processBookTicker(msg.data);
+    }
 
 });
 
