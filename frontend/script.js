@@ -1,3 +1,5 @@
+let chart;
+
 async function loadStatus() {
 
     try {
@@ -12,28 +14,6 @@ async function loadStatus() {
         document.getElementById("status").innerHTML = "Server Offline";
 
     }
-
-}
-
-let chart;
-
-function initChart() {
-
-    const ctx = document.getElementById("priceChart").getContext("2d");
-
-    chart = new Chart(ctx, {
-        type: "candlestick",
-        data: {
-            datasets: [{
-                label: "BTCUSDT",
-                data: []
-            }]
-        },
-        options: {
-            responsive: true,
-            animation: false
-        }
-    });
 
 }
 
@@ -85,7 +65,7 @@ async function loadChart() {
 
         const candles = data.history["1m"];
 
-        chart.data.datasets[0].data = candles.map(c => ({
+        const chartData = candles.map(c => ({
             x: new Date(c.time),
             o: c.open,
             h: c.high,
@@ -93,7 +73,37 @@ async function loadChart() {
             c: c.close
         }));
 
-        chart.update();
+        if (!chart) {
+
+            const ctx = document
+                .getElementById("priceChart")
+                .getContext("2d");
+
+            chart = new Chart(ctx, {
+                type: "candlestick",
+                data: {
+                    datasets: [{
+                        label: "BTCUSDT",
+                        data: chartData
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    animation: false,
+                    plugins: {
+                        legend: {
+                            display: true
+                        }
+                    }
+                }
+            });
+
+        } else {
+
+            chart.data.datasets[0].data = chartData;
+            chart.update();
+
+        }
 
     } catch (err) {
 
@@ -103,18 +113,17 @@ async function loadChart() {
 
 }
 
-initChart();
+async function refresh() {
 
-loadStatus();
-loadMarket();
-loadIndicators();
-loadChart();
+    await loadStatus();
+    await loadMarket();
+    await loadIndicators();
+    await loadChart();
 
-setInterval(() => {
+}
 
-    loadStatus();
-    loadMarket();
-    loadIndicators();
-    loadChart();
+refresh();
 
-}, 2000);
+setInterval(refresh, 2000);
+
+           
