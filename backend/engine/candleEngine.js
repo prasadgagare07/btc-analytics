@@ -1,3 +1,5 @@
+const db = require("../database/db");
+
 const candles = {
   "1m": [],
   "3m": [],
@@ -12,12 +14,33 @@ function updateCandle(market) {
   const minute = Math.floor(now / 60000) * 60000;
 
   if (!current1m || current1m.time !== minute) {
+
     if (current1m) {
+
       candles["1m"].push(current1m);
+
+      db.query(
+        `INSERT INTO candles
+        (time, open, high, low, close, buy_volume, sell_volume, delta, cvd, trades)
+        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,
+        [
+          current1m.time,
+          current1m.open,
+          current1m.high,
+          current1m.low,
+          current1m.close,
+          current1m.buyVolume,
+          current1m.sellVolume,
+          current1m.delta,
+          current1m.cvd,
+          current1m.trades
+        ]
+      ).catch(console.error);
 
       if (candles["1m"].length > 500) {
         candles["1m"].shift();
       }
+
     }
 
     current1m = {
