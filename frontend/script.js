@@ -1,4 +1,3 @@
-
 async function loadStatus() {
 
     try {
@@ -16,6 +15,33 @@ async function loadStatus() {
 
 }
 
+let chart;
+const labels = [];
+const prices = [];
+
+function initChart() {
+
+    const ctx = document.getElementById("priceChart").getContext("2d");
+
+    chart = new Chart(ctx, {
+        type: "line",
+        data: {
+            labels: labels,
+            datasets: [{
+                label: "BTC Price",
+                data: prices,
+                borderWidth: 2,
+                tension: 0.2
+            }]
+        },
+        options: {
+            responsive: true,
+            animation: false
+        }
+    });
+
+}
+
 async function loadMarket() {
 
     try {
@@ -27,6 +53,18 @@ async function loadMarket() {
         document.getElementById("buyVolume").innerHTML = data.buyVolume ?? "-";
         document.getElementById("sellVolume").innerHTML = data.sellVolume ?? "-";
         document.getElementById("delta").innerHTML = data.delta ?? "-";
+
+        const now = new Date().toLocaleTimeString();
+
+        labels.push(now);
+        prices.push(data.lastPrice);
+
+        if (labels.length > 30) {
+            labels.shift();
+            prices.shift();
+        }
+
+        chart.update();
 
     } catch (err) {
 
@@ -54,6 +92,8 @@ async function loadIndicators() {
     }
 
 }
+
+initChart();
 
 loadStatus();
 loadMarket();
