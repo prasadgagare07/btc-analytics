@@ -8,8 +8,10 @@ const path = require("path");
 const fs = require("fs");
 const db = require("./database/db");
 
+const { loadCandles } = require("./database/candleRepository");
 const { connectBinance } = require("./websocket/binanceSocket");
-const { updateCandle, getCandles } = require("./engine/candleEngine");
+//const { updateCandle, getCandles } = require("./engine/candleEngine");
+const { updateCandle, getCandles, loadHistory } = require("./engine/candleEngine");
 const { aggregate } = require("./engine/timeframeEngine");
 const { calculateEMA, calculateRSI } = require("./engine/indicatorEngine");
 
