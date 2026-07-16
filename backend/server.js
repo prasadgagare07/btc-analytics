@@ -9,7 +9,7 @@ const path = require("path");
 
 const { connectBinance } = require("./websocket/binanceSocket");
 const { updateCandle, getCandles } = require("./engine/candleEngine");
-
+const { aggregate } = require("./engine/timeframeEngine");
 const app = express();
 
 const PORT = process.env.PORT || 10000;
@@ -35,7 +35,18 @@ res.json(marketState);
 app.get("/api/candles", (req, res) => {
     res.json(getCandles());
 });
+app.get("/api/timeframes", (req, res) => {
 
+    const candles = getCandles().history["1m"];
+
+    res.json({
+        "1m": candles,
+        "3m": aggregate(candles, 3),
+        "5m": aggregate(candles, 5),
+        "10m": aggregate(candles, 10)
+    });
+
+});
 // Serve Frontend
 app.use(express.static(path.join(__dirname, "../frontend")));
 
