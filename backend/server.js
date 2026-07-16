@@ -73,6 +73,25 @@ app.get("/api/indicators", (req, res) => {
 });
 
 });
+app.get("/api/dbcount", async (req, res) => {
+
+    try {
+
+        const result = await db.query(
+            "SELECT COUNT(*) AS total FROM candles"
+        );
+
+        res.json(result.rows[0]);
+
+    } catch (err) {
+
+        res.status(500).json({
+            error: err.message
+        });
+
+    }
+
+});
 // Serve Frontend
 app.use(express.static(path.join(__dirname, "../frontend")));
 
