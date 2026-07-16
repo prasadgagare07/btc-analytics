@@ -23,8 +23,8 @@ function updateCandle(market) {
         `INSERT INTO candles
         (time, open, high, low, close, buy_volume, sell_volume, delta, cvd, trades)
         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,
-        [
-          new Date(current1m.time),
+        [ 
+          current1m.time,
           current1m.open,
           current1m.high,
           current1m.low,
