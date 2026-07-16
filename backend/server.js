@@ -1,18 +1,18 @@
-const marketState =
-require("./data/marketState");
+const marketState = require("./data/marketState");
 
 require("dotenv").config();
 
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
+const fs = require("fs");
 const db = require("./database/db");
 
 const { connectBinance } = require("./websocket/binanceSocket");
 const { updateCandle, getCandles } = require("./engine/candleEngine");
 const { aggregate } = require("./engine/timeframeEngine");
-//const { calculateEMA } = require("./engine/indicatorEngine");
 const { calculateEMA, calculateRSI } = require("./engine/indicatorEngine");
+
 const app = express();
 
 const PORT = process.env.PORT || 10000;
@@ -29,15 +29,14 @@ app.get("/api/status", (req, res) => {
     });
 });
 
-app.get("/api/market",(req,res)=>{
-
-res.json(marketState);
-
+app.get("/api/market", (req, res) => {
+    res.json(marketState);
 });
 
 app.get("/api/candles", (req, res) => {
     res.json(getCandles());
 });
+
 app.get("/api/timeframes", (req, res) => {
 
     const candles = getCandles().history["1m"];
@@ -55,24 +54,14 @@ app.get("/api/indicators", (req, res) => {
 
     const candles = getCandles().history["1m"];
 
-    /*res.json({
-
-        ema9: calculateEMA(candles, 9),
-
-        ema21: calculateEMA(candles, 21)
-
-    });*/
     res.json({
-
-    ema9: calculateEMA(candles, 9),
-
-    ema21: calculateEMA(candles, 21),
-
-    rsi: calculateRSI(candles)
+        ema9: calculateEMA(candles, 9),
+        ema21: calculateEMA(candles, 21),
+        rsi: calculateRSI(candles)
+    });
 
 });
 
-});
 app.get("/api/dbcount", async (req, res) => {
 
     try {
@@ -92,12 +81,39 @@ app.get("/api/dbcount", async (req, res) => {
     }
 
 });
+
+app.get("/api/export", async (req, res) => {
+
+    try {
+
+        const result = await db.query(
+            "SELECT * FROM candles ORDER BY time ASC"
+        );
+
+        fs.writeFileSync(
+            "candles.json",
+            JSON.stringify(result.rows, null, 2)
+        );
+
+        res.download("candles.json");
+
+    } catch (err) {
+
+        res.status(500).json({
+            error: err.message
+        });
+
+    }
+
+});
+
 // Serve Frontend
 app.use(express.static(path.join(__dirname, "../frontend")));
 
 app.get("*", (req, res) => {
     res.sendFile(path.join(__dirname, "../frontend/index.html"));
 });
+
 async function initDatabase() {
 
     try {
