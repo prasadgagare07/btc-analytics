@@ -10,6 +10,7 @@ const path = require("path");
 const { connectBinance } = require("./websocket/binanceSocket");
 const { updateCandle, getCandles } = require("./engine/candleEngine");
 const { aggregate } = require("./engine/timeframeEngine");
+const { calculateEMA } = require("./engine/indicatorEngine");
 const app = express();
 
 const PORT = process.env.PORT || 10000;
