@@ -9,7 +9,25 @@ const candles = {
 
 let current1m = null;
 
+function loadHistory(rows) {
+
+  candles["1m"] = rows.map(row => ({
+    time: Number(row.time),
+    open: Number(row.open),
+    high: Number(row.high),
+    low: Number(row.low),
+    close: Number(row.close),
+    buyVolume: Number(row.buy_volume),
+    sellVolume: Number(row.sell_volume),
+    delta: Number(row.delta),
+    cvd: Number(row.cvd),
+    trades: Number(row.trades)
+  }));
+
+}
+
 function updateCandle(market) {
+
   const now = Date.now();
   const minute = Math.floor(now / 60000) * 60000;
 
@@ -23,7 +41,7 @@ function updateCandle(market) {
         `INSERT INTO candles
         (time, open, high, low, close, buy_volume, sell_volume, delta, cvd, trades)
         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,
-        [ 
+        [
           current1m.time,
           current1m.open,
           current1m.high,
@@ -55,6 +73,7 @@ function updateCandle(market) {
       cvd: market.cvd,
       trades: 0
     };
+
   }
 
   current1m.close = market.lastPrice;
@@ -66,16 +85,20 @@ function updateCandle(market) {
   current1m.delta = market.delta;
   current1m.cvd = market.cvd;
   current1m.trades = market.tradeCount;
+
 }
 
 function getCandles() {
+
   return {
     current: current1m,
     history: candles
   };
+
 }
 
 module.exports = {
   updateCandle,
-  getCandles
+  getCandles,
+  loadHistory
 };
