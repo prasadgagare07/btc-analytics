@@ -144,16 +144,29 @@ async function initDatabase() {
 
 }
 
-initDatabase();
-connectBinance();
+async function startServer() {
 
-setInterval(() => {
-    updateCandle(marketState);
-}, 1000);
+    await initDatabase();
 
-app.listen(PORT, () => {
-    console.log("==================================");
-    console.log("BTC Analytics Server Started");
-    console.log("Port:", PORT);
-    console.log("==================================");
-});
+    const history = await loadCandles();
+
+    loadHistory(history);
+
+    console.log("Loaded candles:", history.length);
+
+    connectBinance();
+
+    setInterval(() => {
+        updateCandle(marketState);
+    }, 1000);
+
+    app.listen(PORT, () => {
+        console.log("==================================");
+        console.log("BTC Analytics Server Started");
+        console.log("Port:", PORT);
+        console.log("==================================");
+    });
+
+}
+
+startServer();
