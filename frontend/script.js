@@ -16,22 +16,17 @@ async function loadStatus() {
 }
 
 let chart;
-const labels = [];
-const prices = [];
 
 function initChart() {
 
     const ctx = document.getElementById("priceChart").getContext("2d");
 
     chart = new Chart(ctx, {
-        type: "line",
+        type: "candlestick",
         data: {
-            labels: labels,
             datasets: [{
-                label: "BTC Price",
-                data: prices,
-                borderWidth: 2,
-                tension: 0.2
+                label: "BTCUSDT",
+                data: []
             }]
         },
         options: {
@@ -53,18 +48,6 @@ async function loadMarket() {
         document.getElementById("buyVolume").innerHTML = data.buyVolume ?? "-";
         document.getElementById("sellVolume").innerHTML = data.sellVolume ?? "-";
         document.getElementById("delta").innerHTML = data.delta ?? "-";
-
-        const now = new Date().toLocaleTimeString();
-
-        labels.push(now);
-        prices.push(data.lastPrice);
-
-        if (labels.length > 30) {
-            labels.shift();
-            prices.shift();
-        }
-
-        chart.update();
 
     } catch (err) {
 
@@ -93,16 +76,45 @@ async function loadIndicators() {
 
 }
 
+async function loadChart() {
+
+    try {
+
+        const res = await fetch("/api/candles");
+        const data = await res.json();
+
+        const candles = data.history["1m"];
+
+        chart.data.datasets[0].data = candles.map(c => ({
+            x: new Date(c.time),
+            o: c.open,
+            h: c.high,
+            l: c.low,
+            c: c.close
+        }));
+
+        chart.update();
+
+    } catch (err) {
+
+        console.log(err);
+
+    }
+
+}
+
 initChart();
 
 loadStatus();
 loadMarket();
 loadIndicators();
+loadChart();
 
 setInterval(() => {
 
     loadStatus();
     loadMarket();
     loadIndicators();
+    loadChart();
 
 }, 2000);
