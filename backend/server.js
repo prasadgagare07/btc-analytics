@@ -6,6 +6,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
+const db = require("./database/db");
 
 const { connectBinance } = require("./websocket/binanceSocket");
 const { updateCandle, getCandles } = require("./engine/candleEngine");
@@ -78,7 +79,37 @@ app.use(express.static(path.join(__dirname, "../frontend")));
 app.get("*", (req, res) => {
     res.sendFile(path.join(__dirname, "../frontend/index.html"));
 });
+async function initDatabase() {
 
+    try {
+
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS candles (
+                id SERIAL PRIMARY KEY,
+                time BIGINT,
+                open DOUBLE PRECISION,
+                high DOUBLE PRECISION,
+                low DOUBLE PRECISION,
+                close DOUBLE PRECISION,
+                buy_volume DOUBLE PRECISION,
+                sell_volume DOUBLE PRECISION,
+                delta DOUBLE PRECISION,
+                cvd DOUBLE PRECISION,
+                trades INTEGER
+            );
+        `);
+
+        console.log("Database Ready");
+
+    } catch (err) {
+
+        console.error(err);
+
+    }
+
+}
+
+initDatabase();
 connectBinance();
 
 setInterval(() => {
