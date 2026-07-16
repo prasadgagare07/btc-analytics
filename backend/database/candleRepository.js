@@ -6,7 +6,7 @@ async function saveCandle(candle) {
         (time, open, high, low, close, buy_volume, sell_volume, delta, cvd, trades)
         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,
         [
-            new Date(candle.time),
+            candle.time,
             candle.open,
             candle.high,
             candle.low,
@@ -20,6 +20,17 @@ async function saveCandle(candle) {
     );
 }
 
+async function loadCandles() {
+
+    const result = await pool.query(
+        "SELECT * FROM candles ORDER BY time ASC"
+    );
+
+    return result.rows;
+
+}
+
 module.exports = {
-    saveCandle
+    saveCandle,
+    loadCandles
 };
