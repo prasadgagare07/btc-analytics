@@ -48,6 +48,20 @@ app.get("/api/timeframes", (req, res) => {
     });
 
 });
+
+app.get("/api/indicators", (req, res) => {
+
+    const candles = getCandles().history["1m"];
+
+    res.json({
+
+        ema9: calculateEMA(candles, 9),
+
+        ema21: calculateEMA(candles, 21)
+
+    });
+
+});
 // Serve Frontend
 app.use(express.static(path.join(__dirname, "../frontend")));
 
