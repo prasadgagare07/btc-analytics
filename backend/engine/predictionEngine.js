@@ -11,7 +11,7 @@ function trend(candles) {
     return 0;
 }
 
-function predict(data, indicators, market) {
+function predict(data, indicators, market, pattern) { {
 
     const {
         candles1m,
@@ -50,6 +50,18 @@ function predict(data, indicators, market) {
         score += 15;
     else
         score -= 15;
+    // Candlestick pattern
+if (pattern === "BULLISH_ENGULFING")
+    score += 20;
+
+if (pattern === "HAMMER")
+    score += 15;
+
+if (pattern === "BEARISH_ENGULFING")
+    score -= 20;
+
+if (pattern === "DOJI")
+    score -= 5;
 
     let signal = "HOLD";
 
@@ -60,7 +72,7 @@ function predict(data, indicators, market) {
 
     return {
         signal,
-        confidence: Math.min(Math.abs(score), 100)
+        confidence: Math.min(Math.abs(score), 100),
     };
 }
 
