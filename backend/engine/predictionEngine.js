@@ -51,6 +51,22 @@ function predict(data, indicators, market, pattern) {
         score += 15;
     else
         score -= 15;
+
+// Order Book Imbalance
+const total = market.buyVolume + market.sellVolume;
+
+if (total > 0) {
+
+    const imbalance =
+        ((market.buyVolume - market.sellVolume) / total) * 100;
+
+    if (imbalance > 10)
+        score += 15;
+
+    if (imbalance < -10)
+        score -= 15;
+}
+    
     // Candlestick pattern
 if (pattern === "BULLISH_ENGULFING")
     score += 20;
