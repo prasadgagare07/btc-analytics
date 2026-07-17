@@ -13,6 +13,7 @@ const { connectBinance } = require("./websocket/binanceSocket");
 const { updateCandle, getCandles, loadHistory } = require("./engine/candleEngine");
 const { aggregate } = require("./engine/timeframeEngine");
 const { calculateEMA, calculateRSI } = require("./engine/indicatorEngine");
+const { startOpenInterest } = require("./services/openInterestService");
 const { predict } = require("./engine/predictionEngine");
 const { detectPattern } = require("./engine/patternEngine");
 const { analyzeOrderBook } = require("./engine/orderBookEngine");
@@ -241,7 +242,7 @@ async function startServer() {
     console.log("Loaded candles:", history.length);
 
     connectBinance();
-
+    startOpenInterest();
     setInterval(() => {
         updateCandle(marketState);
     }, 1000);
