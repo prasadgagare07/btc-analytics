@@ -92,6 +92,59 @@ async function refresh() {
 
 }
 
+async function loadChart() {
+
+    const res = await fetch("/api/candles");
+    const data = await res.json();
+
+    const candles = data.history["1m"];
+
+    const labels = candles.map(c =>
+        new Date(c.time).toLocaleTimeString()
+    );
+
+    const prices = candles.map(c => c.close);
+
+    if (!chart) {
+
+        chart = new Chart(
+            document.getElementById("priceChart"),
+            {
+                type: "line",
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: "BTC Price",
+                        data: prices,
+                        borderWidth: 2,
+                        fill: false
+                    }]
+                },
+                options: {
+                    responsive: true
+                }
+            }
+        );
+
+    } else {
+
+        chart.data.labels = labels;
+        chart.data.datasets[0].data = prices;
+        chart.update();
+
+    }
+
+}
+
+async function refresh() {
+
+    await loadStatus();
+    await loadMarket();
+    await loadIndicators();
+    await loadChart();
+
+}
+
 refresh();
 
 setInterval(refresh, 2000);
