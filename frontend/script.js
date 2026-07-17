@@ -26,6 +26,27 @@ async function loadMarket() {
     }
 }
 
+async function loadOrderBook() {
+
+    try {
+
+        const res = await fetch("/api/orderbook");
+        const data = await res.json();
+
+        document.getElementById("imbalance").innerHTML =
+            data.imbalance + "%";
+
+        document.getElementById("orderSignal").innerHTML =
+            data.side;
+
+    } catch (err) {
+
+        console.log(err);
+
+    }
+
+}
+
 async function loadIndicators() {
     try {
         const res = await fetch("/api/indicators");
@@ -104,6 +125,7 @@ async function refresh() {
 
     await loadStatus();
     await loadMarket();
+    await loadOrderBook();
     await loadIndicators();
     await loadPrediction();
     await loadChart();
