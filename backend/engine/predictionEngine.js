@@ -1,6 +1,6 @@
 function predict(candles, indicators, market) {
 
-    if (!candles.length) {
+    if (candles.length < 21) {
         return {
             signal: "WAIT",
             confidence: 0
@@ -10,36 +10,46 @@ function predict(candles, indicators, market) {
     let score = 0;
 
     // EMA Trend
-    if (indicators.ema9 > indicators.ema21) {
-        score += 30;
-    } else {
-        score -= 30;
-    }
+    if (indicators.ema9 > indicators.ema21)
+        score += 25;
+    else
+        score -= 25;
 
     // RSI
-    if (indicators.rsi > 55) {
-        score += 20;
-    } else if (indicators.rsi < 45) {
-        score -= 20;
-    }
+    if (indicators.rsi > 60)
+        score += 15;
+    else if (indicators.rsi < 40)
+        score -= 15;
 
     // Delta
-    if (market.delta > 0) {
-        score += 25;
-    } else {
-        score -= 25;
-    }
+    if (market.delta > 0)
+        score += 20;
+    else
+        score -= 20;
 
-    // Buy vs Sell Volume
-    if (market.buyVolume > market.sellVolume) {
-        score += 25;
-    } else {
-        score -= 25;
-    }
+    // CVD
+    if (market.cvd > 0)
+        score += 20;
+    else
+        score -= 20;
+
+    // Buy/Sell Volume
+    if (market.buyVolume > market.sellVolume)
+        score += 20;
+    else
+        score -= 20;
+
+    let signal = "HOLD";
+
+    if (score >= 30)
+        signal = "BUY";
+
+    if (score <= -30)
+        signal = "SELL";
 
     return {
-        signal: score >= 0 ? "BUY" : "SELL",
-        confidence: Math.abs(score)
+        signal,
+        confidence: Math.min(Math.abs(score), 100)
     };
 }
 
