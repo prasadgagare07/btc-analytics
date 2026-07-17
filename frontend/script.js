@@ -85,9 +85,9 @@ async function loadChart() {
                 }
             );
 
-            candleSeries = chart.addSeries(
-                LightweightCharts.CandlestickSeries
-            );
+            
+candleSeries = chart.addCandlestickSeries();
+            
         }
 
         candleSeries.setData(chartData);
