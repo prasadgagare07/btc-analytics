@@ -15,6 +15,7 @@ const { aggregate } = require("./engine/timeframeEngine");
 const { calculateEMA, calculateRSI } = require("./engine/indicatorEngine");
 const { predict } = require("./engine/predictionEngine");
 const { detectPattern } = require("./engine/patternEngine");
+const { addPrediction, getHistory } = require("./data/predictionHistory");
 
 const app = express();
 
