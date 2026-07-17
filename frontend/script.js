@@ -1,4 +1,5 @@
 let chart;
+let candleSeries;
 
 async function loadStatus() {
     try {
@@ -19,7 +20,6 @@ async function loadMarket() {
         document.getElementById("buyVolume").innerHTML = Number(data.buyVolume ?? 0).toFixed(2);
         document.getElementById("sellVolume").innerHTML = Number(data.sellVolume ?? 0).toFixed(2);
         document.getElementById("delta").innerHTML = Number(data.delta ?? 0).toFixed(2);
-
     } catch (err) {
         console.log(err);
     }
@@ -33,7 +33,6 @@ async function loadIndicators() {
         document.getElementById("ema9").innerHTML = data.ema9 ?? "-";
         document.getElementById("ema21").innerHTML = data.ema21 ?? "-";
         document.getElementById("rsi").innerHTML = data.rsi ?? "-";
-
     } catch (err) {
         console.log(err);
     }
@@ -46,106 +45,37 @@ async function loadChart() {
 
     const candles = data.history["1m"];
 
-    const labels = candles.map(c =>
-        new Date(c.time).toLocaleTimeString()
-    );
-
-    const prices = candles.map(c => c.close);
+    const chartData = candles.map(c => ({
+        time: Math.floor(c.time / 1000),
+        open: c.open,
+        high: c.high,
+        low: c.low,
+        close: c.close
+    }));
 
     if (!chart) {
 
-        chart = new Chart(
+        chart = LightweightCharts.createChart(
             document.getElementById("priceChart"),
             {
-                type: "line",
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: "BTC Price",
-                        data: prices,
-                        borderWidth: 2,
-                        fill: false
-                    }]
-                },
-                options: {
-                    responsive: true
-                }
+                width: document.getElementById("priceChart").clientWidth,
+                height: 400
             }
         );
 
-    } else {
-
-        chart.data.labels = labels;
-        chart.data.datasets[0].data = prices;
-        chart.update();
-
+        candleSeries = chart.addCandlestickSeries();
     }
 
+    candleSeries.setData(chartData);
 }
 
 async function refresh() {
-
     await loadStatus();
     await loadMarket();
     await loadIndicators();
     await loadChart();
-
-}
-
-async function loadChart() {
-
-    const res = await fetch("/api/candles");
-    const data = await res.json();
-
-    const candles = data.history["1m"];
-
-    const labels = candles.map(c =>
-        new Date(c.time).toLocaleTimeString()
-    );
-
-    const prices = candles.map(c => c.close);
-
-    if (!chart) {
-
-        chart = new Chart(
-            document.getElementById("priceChart"),
-            {
-                type: "line",
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: "BTC Price",
-                        data: prices,
-                        borderWidth: 2,
-                        fill: false
-                    }]
-                },
-                options: {
-                    responsive: true
-                }
-            }
-        );
-
-    } else {
-
-        chart.data.labels = labels;
-        chart.data.datasets[0].data = prices;
-        chart.update();
-
-    }
-
-}
-
-async function refresh() {
-
-    await loadStatus();
-    await loadMarket();
-    await loadIndicators();
-    await loadChart();
-
 }
 
 refresh();
 
 setInterval(refresh, 2000);
-           
