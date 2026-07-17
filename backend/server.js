@@ -14,6 +14,7 @@ const { updateCandle, getCandles, loadHistory } = require("./engine/candleEngine
 const { aggregate } = require("./engine/timeframeEngine");
 const { calculateEMA, calculateRSI } = require("./engine/indicatorEngine");
 const { predict } = require("./engine/predictionEngine");
+const { detectPattern } = require("./engine/patternEngine");
 
 const app = express();
 
@@ -22,7 +23,7 @@ const PORT = process.env.PORT || 10000;
 app.use(cors());
 app.use(express.json());
 
-// API Health Check
+// API Health
 app.get("/api/status", (req, res) => {
     res.json({
         status: "Running",
