@@ -80,6 +80,23 @@ if (pattern === "BEARISH_ENGULFING")
 if (pattern === "DOJI")
     score -= 5;
 
+    // Support & Resistance
+const recent = candles1m[candles1m.length - 1];
+
+if (recent) {
+
+    const lows = candles1m.slice(-20).map(c => c.low);
+    const highs = candles1m.slice(-20).map(c => c.high);
+
+    const support = Math.min(...lows);
+    const resistance = Math.max(...highs);
+
+    if (recent.close <= support * 1.002)
+        score += 15;
+
+    if (recent.close >= resistance * 0.998)
+        score -= 15;
+}
     let signal = "HOLD";
 
     if (score >= 40)
