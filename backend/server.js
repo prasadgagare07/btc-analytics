@@ -83,18 +83,21 @@ app.get("/api/prediction", (req, res) => {
         ema21: calculateEMA(candles1m, 21),
         rsi: calculateRSI(candles1m)
     };
+    const pattern = detectPattern(candles1m);
 
     res.json(
+
         predict(
-            {
-                candles1m,
-                candles3m,
-                candles5m,
-                candles10m
-            },
-            indicators,
-            marketState
-        )
+    {
+        candles1m,
+        candles3m,
+        candles5m,
+        candles10m
+    },
+    indicators,
+    marketState,
+    pattern
+)
     );
 
 });
