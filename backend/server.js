@@ -17,6 +17,7 @@ const { predict } = require("./engine/predictionEngine");
 const { detectPattern } = require("./engine/patternEngine");
 const { analyzeOrderBook } = require("./engine/orderBookEngine");
 const { detectLevels } = require("./engine/supportResistanceEngine");
+const { getOpenInterest } = require("./engine/openInterestEngine");
 //const { addPrediction, getHistory } = require("./data/predictionHistory");
 const { addPrediction, getHistory, getStats } = require("./data/predictionHistory");
 console.log("PredictionHistory module loaded");
@@ -54,6 +55,14 @@ app.get("/api/levels", (req, res) => {
 
     res.json(
         detectLevels(candles)
+    );
+
+});
+
+app.get("/api/open-interest", (req, res) => {
+
+    res.json(
+        getOpenInterest()
     );
 
 });
