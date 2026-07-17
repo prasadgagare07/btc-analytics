@@ -1,46 +1,32 @@
 let chart;
 
 async function loadStatus() {
-
     try {
-
         const res = await fetch("/api/status");
         const data = await res.json();
-
         document.getElementById("status").innerHTML = data.status;
-
     } catch {
-
         document.getElementById("status").innerHTML = "Server Offline";
-
     }
-
 }
 
 async function loadMarket() {
-
     try {
-
         const res = await fetch("/api/market");
         const data = await res.json();
 
         document.getElementById("price").innerHTML = data.lastPrice ?? "-";
-        document.getElementById("buyVolume").innerHTML = data.buyVolume ?? "-";
-        document.getElementById("sellVolume").innerHTML = data.sellVolume ?? "-";
-        document.getElementById("delta").innerHTML = data.delta ?? "-";
+        document.getElementById("buyVolume").innerHTML = Number(data.buyVolume ?? 0).toFixed(2);
+        document.getElementById("sellVolume").innerHTML = Number(data.sellVolume ?? 0).toFixed(2);
+        document.getElementById("delta").innerHTML = Number(data.delta ?? 0).toFixed(2);
 
     } catch (err) {
-
         console.log(err);
-
     }
-
 }
 
 async function loadIndicators() {
-
     try {
-
         const res = await fetch("/api/indicators");
         const data = await res.json();
 
@@ -49,65 +35,49 @@ async function loadIndicators() {
         document.getElementById("rsi").innerHTML = data.rsi ?? "-";
 
     } catch (err) {
-
         console.log(err);
-
     }
-
 }
 
 async function loadChart() {
 
-    try {
+    const res = await fetch("/api/candles");
+    const data = await res.json();
 
-        const res = await fetch("/api/candles");
-        const data = await res.json();
+    const candles = data.history["1m"];
 
-        const candles = data.history["1m"];
+    const labels = candles.map(c =>
+        new Date(c.time).toLocaleTimeString()
+    );
 
-        const chartData = candles.map(c => ({
-            x: new Date(c.time),
-            o: c.open,
-            h: c.high,
-            l: c.low,
-            c: c.close
-        }));
+    const prices = candles.map(c => c.close);
 
-        if (!chart) {
+    if (!chart) {
 
-            const ctx = document
-                .getElementById("priceChart")
-                .getContext("2d");
-
-            chart = new Chart(ctx, {
-                type: "candlestick",
+        chart = new Chart(
+            document.getElementById("priceChart"),
+            {
+                type: "line",
                 data: {
+                    labels: labels,
                     datasets: [{
-                        label: "BTCUSDT",
-                        data: chartData
+                        label: "BTC Price",
+                        data: prices,
+                        borderWidth: 2,
+                        fill: false
                     }]
                 },
                 options: {
-                    responsive: true,
-                    animation: false,
-                    plugins: {
-                        legend: {
-                            display: true
-                        }
-                    }
+                    responsive: true
                 }
-            });
+            }
+        );
 
-        } else {
+    } else {
 
-            chart.data.datasets[0].data = chartData;
-            chart.update();
-
-        }
-
-    } catch (err) {
-
-        console.log(err);
+        chart.data.labels = labels;
+        chart.data.datasets[0].data = prices;
+        chart.update();
 
     }
 
@@ -125,5 +95,4 @@ async function refresh() {
 refresh();
 
 setInterval(refresh, 2000);
-
            
