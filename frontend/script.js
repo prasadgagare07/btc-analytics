@@ -1,5 +1,4 @@
 let chart;
-let candleSeries;
 
 async function loadStatus() {
     try {
