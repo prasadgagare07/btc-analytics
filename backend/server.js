@@ -10,10 +10,10 @@ const db = require("./database/db");
 
 const { loadCandles } = require("./database/candleRepository");
 const { connectBinance } = require("./websocket/binanceSocket");
-//const { updateCandle, getCandles } = require("./engine/candleEngine");
 const { updateCandle, getCandles, loadHistory } = require("./engine/candleEngine");
 const { aggregate } = require("./engine/timeframeEngine");
 const { calculateEMA, calculateRSI } = require("./engine/indicatorEngine");
+const { predict } = require("./engine/predictionEngine");
 
 const app = express();
 
@@ -31,14 +31,17 @@ app.get("/api/status", (req, res) => {
     });
 });
 
+// Live Market
 app.get("/api/market", (req, res) => {
     res.json(marketState);
 });
 
+// Candles
 app.get("/api/candles", (req, res) => {
     res.json(getCandles());
 });
 
+// Timeframes
 app.get("/api/timeframes", (req, res) => {
 
     const candles = getCandles().history["1m"];
@@ -52,10 +55,10 @@ app.get("/api/timeframes", (req, res) => {
 
 });
 
+// Indicators
 app.get("/api/indicators", (req, res) => {
 
     const candles = getCandles().history["1m"];
-    console.log("Candles in memory:", candles.length);
 
     res.json({
         ema9: calculateEMA(candles, 9),
@@ -65,6 +68,28 @@ app.get("/api/indicators", (req, res) => {
 
 });
 
+// Prediction
+app.get("/api/prediction", (req, res) => {
+
+    const candles = getCandles().history["1m"];
+
+    const indicators = {
+        ema9: calculateEMA(candles, 9),
+        ema21: calculateEMA(candles, 21),
+        rsi: calculateRSI(candles)
+    };
+
+    const prediction = predict(
+        candles,
+        indicators,
+        marketState
+    );
+
+    res.json(prediction);
+
+});
+
+// Database Count
 app.get("/api/dbcount", async (req, res) => {
 
     try {
@@ -85,6 +110,7 @@ app.get("/api/dbcount", async (req, res) => {
 
 });
 
+// Export Candles
 app.get("/api/export", async (req, res) => {
 
     try {
@@ -117,6 +143,7 @@ app.get("*", (req, res) => {
     res.sendFile(path.join(__dirname, "../frontend/index.html"));
 });
 
+// Initialize Database
 async function initDatabase() {
 
     try {
@@ -147,6 +174,7 @@ async function initDatabase() {
 
 }
 
+// Start Server
 async function startServer() {
 
     await initDatabase();
