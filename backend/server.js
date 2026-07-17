@@ -15,6 +15,7 @@ const { aggregate } = require("./engine/timeframeEngine");
 const { calculateEMA, calculateRSI } = require("./engine/indicatorEngine");
 const { predict } = require("./engine/predictionEngine");
 const { detectPattern } = require("./engine/patternEngine");
+const { analyzeOrderBook } = require("./engine/orderBookEngine");
 //const { addPrediction, getHistory } = require("./data/predictionHistory");
 const { addPrediction, getHistory, getStats } = require("./data/predictionHistory");
 console.log("PredictionHistory module loaded");
@@ -39,7 +40,13 @@ app.get("/api/status", (req, res) => {
 app.get("/api/market", (req, res) => {
     res.json(marketState);
 });
+app.get("/api/orderbook", (req, res) => {
 
+    res.json(
+        analyzeOrderBook(marketState)
+    );
+
+});
 // Candles
 app.get("/api/candles", (req, res) => {
     res.json(getCandles());
