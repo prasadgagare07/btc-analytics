@@ -106,6 +106,9 @@ addPrediction({
     time: Date.now()
 });
 
+console.log("Prediction saved:", prediction);
+console.log("History size:", getHistory().length);
+
 res.json(prediction);
 });
 app.get("/api/prediction-history", (req, res) => {
