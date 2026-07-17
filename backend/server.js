@@ -68,24 +68,33 @@ app.get("/api/indicators", (req, res) => {
 
 });
 
-// Prediction
+//predictions
+
 app.get("/api/prediction", (req, res) => {
 
-    const candles = getCandles().history["1m"];
+    const candles1m = getCandles().history["1m"];
+    const candles3m = aggregate(candles1m, 3);
+    const candles5m = aggregate(candles1m, 5);
+    const candles10m = aggregate(candles1m, 10);
 
     const indicators = {
-        ema9: calculateEMA(candles, 9),
-        ema21: calculateEMA(candles, 21),
-        rsi: calculateRSI(candles)
+        ema9: calculateEMA(candles1m, 9),
+        ema21: calculateEMA(candles1m, 21),
+        rsi: calculateRSI(candles1m)
     };
 
-    const prediction = predict(
-        candles,
-        indicators,
-        marketState
+    res.json(
+        predict(
+            {
+                candles1m,
+                candles3m,
+                candles5m,
+                candles10m
+            },
+            indicators,
+            marketState
+        )
     );
-
-    res.json(prediction);
 
 });
 
