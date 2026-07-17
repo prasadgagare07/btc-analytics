@@ -86,9 +86,8 @@ app.get("/api/prediction", (req, res) => {
     };
     const pattern = detectPattern(candles1m);
 
-    res.json(
-
-        predict(
+    
+const prediction = predict(
     {
         candles1m,
         candles3m,
@@ -98,11 +97,19 @@ app.get("/api/prediction", (req, res) => {
     indicators,
     marketState,
     pattern
-)
-    );
+);
 
+addPrediction({
+    ...prediction,
+    price: marketState.lastPrice,
+    time: Date.now()
 });
 
+res.json(prediction);
+});
+app.get("/api/prediction-history", (req, res) => {
+    res.json(getHistory());
+});
 // Database Count
 app.get("/api/dbcount", async (req, res) => {
 
