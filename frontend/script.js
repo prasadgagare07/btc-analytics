@@ -1,4 +1,5 @@
 let chart;
+let candleSeries;
 
 async function loadStatus() {
     try {
@@ -19,6 +20,7 @@ async function loadMarket() {
         document.getElementById("buyVolume").innerHTML = Number(data.buyVolume ?? 0).toFixed(2);
         document.getElementById("sellVolume").innerHTML = Number(data.sellVolume ?? 0).toFixed(2);
         document.getElementById("delta").innerHTML = Number(data.delta ?? 0).toFixed(2);
+
     } catch (err) {
         console.log(err);
     }
@@ -32,47 +34,80 @@ async function loadIndicators() {
         document.getElementById("ema9").innerHTML = data.ema9 ?? "-";
         document.getElementById("ema21").innerHTML = data.ema21 ?? "-";
         document.getElementById("rsi").innerHTML = data.rsi ?? "-";
+
     } catch (err) {
         console.log(err);
     }
 }
 
-async function loadChart() {
+async function loadPrediction() {
 
-    const res = await fetch("/api/candles");
-    const data = await res.json();
+    try {
 
-    const candles = data.history["1m"];
+        const res = await fetch("/api/prediction");
+        const data = await res.json();
 
-    const chartData = candles.map(c => ({
-        time: Math.floor(c.time / 1000),
-        open: c.open,
-        high: c.high,
-        low: c.low,
-        close: c.close
-    }));
+        document.getElementById("signal").innerHTML = data.signal;
+        document.getElementById("confidence").innerHTML = data.confidence + "%";
 
-    if (!chart) {
+    } catch (err) {
 
-        chart = LightweightCharts.createChart(
-            document.getElementById("priceChart"),
-            {
-                width: document.getElementById("priceChart").clientWidth,
-                height: 400
-            }
-        );
+        console.log(err);
 
-        candleSeries = chart.addSeries(LightweightCharts.CandlestickSeries);
     }
 
-    candleSeries.setData(chartData);
+}
+
+async function loadChart() {
+
+    try {
+
+        const res = await fetch("/api/candles");
+        const data = await res.json();
+
+        const candles = data.history["1m"];
+
+        const chartData = candles.map(c => ({
+            time: Math.floor(c.time / 1000),
+            open: c.open,
+            high: c.high,
+            low: c.low,
+            close: c.close
+        }));
+
+        if (!chart) {
+
+            chart = LightweightCharts.createChart(
+                document.getElementById("priceChart"),
+                {
+                    width: 600,
+                    height: 400
+                }
+            );
+
+            candleSeries = chart.addSeries(
+                LightweightCharts.CandlestickSeries
+            );
+        }
+
+        candleSeries.setData(chartData);
+
+    } catch (err) {
+
+        console.log(err);
+
+    }
+
 }
 
 async function refresh() {
+
     await loadStatus();
     await loadMarket();
     await loadIndicators();
+    await loadPrediction();
     await loadChart();
+
 }
 
 refresh();
