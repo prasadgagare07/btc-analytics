@@ -15,7 +15,8 @@ const { aggregate } = require("./engine/timeframeEngine");
 const { calculateEMA, calculateRSI } = require("./engine/indicatorEngine");
 const { predict } = require("./engine/predictionEngine");
 const { detectPattern } = require("./engine/patternEngine");
-const { addPrediction, getHistory } = require("./data/predictionHistory");
+//const { addPrediction, getHistory } = require("./data/predictionHistory");
+const { addPrediction, getHistory, getStats } = require("./data/predictionHistory");
 
 const app = express();
 
@@ -109,6 +110,9 @@ res.json(prediction);
 });
 app.get("/api/prediction-history", (req, res) => {
     res.json(getHistory());
+});
+app.get("/api/accuracy", (req, res) => {
+    res.json(getStats());
 });
 // Database Count
 app.get("/api/dbcount", async (req, res) => {
