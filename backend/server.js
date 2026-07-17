@@ -39,6 +39,18 @@ app.get("/api/candles", (req, res) => {
     res.json(getCandles());
 });
 
+app.get("/api/charttest", (req, res) => {
+
+    const candles = getCandles().history["1m"];
+
+    res.json({
+        total: candles.length,
+        first: candles[0],
+        last: candles[candles.length - 1]
+    });
+
+});
+
 app.get("/api/timeframes", (req, res) => {
 
     const candles = getCandles().history["1m"];
