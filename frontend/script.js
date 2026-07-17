@@ -44,8 +44,6 @@ async function loadChart() {
 
     const candles = data.history["1m"];
 
-    console.log(data);
-console.log(candles);
     const chartData = candles.map(c => ({
         time: Math.floor(c.time / 1000),
         open: c.open,
