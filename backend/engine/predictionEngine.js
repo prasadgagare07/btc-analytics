@@ -11,7 +11,8 @@ function trend(candles) {
     return 0;
 }
 
-function predict(data, indicators, market, pattern) { {
+function predict(data, indicators, market, pattern) { 
+    
 
     const {
         candles1m,
