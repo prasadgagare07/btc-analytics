@@ -17,6 +17,7 @@ const { predict } = require("./engine/predictionEngine");
 const { detectPattern } = require("./engine/patternEngine");
 //const { addPrediction, getHistory } = require("./data/predictionHistory");
 const { addPrediction, getHistory, getStats } = require("./data/predictionHistory");
+console.log("PredictionHistory module loaded");
 
 const app = express();
 
@@ -86,7 +87,7 @@ app.get("/api/prediction", (req, res) => {
         rsi: calculateRSI(candles1m)
     };
     const pattern = detectPattern(candles1m);
-
+console.log("Prediction route called");
     
 const prediction = predict(
     {
