@@ -1,19 +1,38 @@
-function predict(candles, indicators, market) {
+function trend(candles) {
 
-    if (candles.length < 21) {
-        return {
-            signal: "WAIT",
-            confidence: 0
-        };
-    }
+    if (!candles || candles.length < 2) return 0;
+
+    const last = candles[candles.length - 1];
+    const prev = candles[candles.length - 2];
+
+    if (last.close > prev.close) return 1;
+    if (last.close < prev.close) return -1;
+
+    return 0;
+}
+
+function predict(data, indicators, market) {
+
+    const {
+        candles1m,
+        candles3m,
+        candles5m,
+        candles10m
+    } = data;
 
     let score = 0;
 
-    // EMA Trend
+    // Multi-timeframe trend
+    score += trend(candles1m) * 20;
+    score += trend(candles3m) * 20;
+    score += trend(candles5m) * 25;
+    score += trend(candles10m) * 35;
+
+    // EMA
     if (indicators.ema9 > indicators.ema21)
-        score += 25;
+        score += 20;
     else
-        score -= 25;
+        score -= 20;
 
     // RSI
     if (indicators.rsi > 60)
@@ -21,30 +40,22 @@ function predict(candles, indicators, market) {
     else if (indicators.rsi < 40)
         score -= 15;
 
-    // Delta
-    if (market.delta > 0)
-        score += 20;
-    else
-        score -= 20;
-
-    // CVD
-    if (market.cvd > 0)
-        score += 20;
-    else
-        score -= 20;
-
-    // Buy/Sell Volume
+    // Order flow
     if (market.buyVolume > market.sellVolume)
-        score += 20;
+        score += 15;
     else
-        score -= 20;
+        score -= 15;
+
+    if (market.delta > 0)
+        score += 15;
+    else
+        score -= 15;
 
     let signal = "HOLD";
 
-    if (score >= 30)
+    if (score >= 40)
         signal = "BUY";
-
-    if (score <= -30)
+    else if (score <= -40)
         signal = "SELL";
 
     return {
