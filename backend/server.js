@@ -14,6 +14,8 @@ const { updateCandle, getCandles, loadHistory } = require("./engine/candleEngine
 const { aggregate } = require("./engine/timeframeEngine");
 const { calculateEMA, calculateRSI } = require("./engine/indicatorEngine");
 const { startOpenInterest } = require("./services/openInterestService");
+const { startFundingRate } = require("./services/fundingRateService");
+const { getFundingRate } = require("./engine/fundingRateEngine");
 const { predict } = require("./engine/predictionEngine");
 const { detectPattern } = require("./engine/patternEngine");
 const { analyzeOrderBook } = require("./engine/orderBookEngine");
@@ -64,6 +66,14 @@ app.get("/api/open-interest", (req, res) => {
 
     res.json(
         getOpenInterest()
+    );
+
+});
+
+app.get("/api/funding-rate", (req, res) => {
+
+    res.json(
+        getFundingRate()
     );
 
 });
@@ -243,6 +253,7 @@ async function startServer() {
 
     connectBinance();
     startOpenInterest();
+    startFundingRate();
     setInterval(() => {
         updateCandle(marketState);
     }, 1000);
