@@ -97,6 +97,18 @@ if (recent) {
     if (recent.close >= resistance * 0.998)
         score -= 15;
 }
+
+    // Funding Rate
+if (market.fundingRate !== undefined) {
+
+    if (market.fundingRate > 0)
+        score += 5;
+
+    if (market.fundingRate < 0)
+        score -= 5;
+
+}
+    
     let signal = "HOLD";
 
     if (score >= 40)
