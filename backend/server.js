@@ -17,6 +17,7 @@ const { startOpenInterest } = require("./services/openInterestService");
 const { startFundingRate } = require("./services/fundingRateService");
 const { startLiquidation } = require("./services/liquidationService");
 const { getLiquidation } = require("./engine/liquidationEngine");
+const { getAccuracy } = require("./engine/accuracyEngine");
 const { getFundingRate } = require("./engine/fundingRateEngine");
 const { predict } = require("./engine/predictionEngine");
 const { detectPattern } = require("./engine/patternEngine");
@@ -84,6 +85,14 @@ app.get("/api/liquidation", (req, res) => {
 
     res.json(
         getLiquidation()
+    );
+
+});
+
+app.get("/api/accuracy", (req, res) => {
+
+    res.json(
+        getAccuracy()
     );
 
 });
