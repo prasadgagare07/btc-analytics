@@ -174,7 +174,6 @@ async function loadChart() {
         }));
 
         if (!chart) {
-
             chart = LightweightCharts.createChart(
                 document.getElementById("priceChart"),
                 {
@@ -182,12 +181,17 @@ async function loadChart() {
                     height: 400
                 }
             );
-        candleSeries = chart.addCandlestickSeries();
 
+            candleSeries = chart.addCandlestickSeries();
+        }
+
+        candleSeries.setData(chartData);
+
+    } catch (err) {
+        console.log(err);
     }
-                candleSeries.setData(chartData);
 
-}   
+}
         
 
 async function refresh() {
