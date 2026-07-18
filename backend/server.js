@@ -101,11 +101,43 @@ app.get("/api/liquidation", (req, res) => {
 
 });
 
-app.get("/api/accuracy", (req, res) => {
+app.get("/api/accuracy", async (req, res) => {
 
-    res.json(
-        getAccuracy()
-    );
+    try {
+
+        const total = await db.query(
+            "SELECT COUNT(*) FROM predictions WHERE correct IS NOT NULL"
+        );
+
+        const correct = await db.query(
+            "SELECT COUNT(*) FROM predictions WHERE correct = true"
+        );
+
+        const totalCount = Number(total.rows[0].count);
+        const correctCount = Number(correct.rows[0].count);
+
+        res.json({
+            total: totalCount,
+            correct: correctCount,
+            accuracy:
+                totalCount === 0
+                    ? 0
+                    : Number(
+                          (
+                              correctCount /
+                              totalCount *
+                              100
+                          ).toFixed(2)
+                      )
+        });
+
+    } catch (err) {
+
+        res.status(500).json({
+            error: err.message
+        });
+
+    }
 
 });
 
