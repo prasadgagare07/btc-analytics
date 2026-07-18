@@ -1,12 +1,3 @@
-
-
-candleSeries = chart.addCandlestickSeries();
-            
-        }
-
-        candleSeries.setData(chartData);
-
-    } catch (err) {
 let chart;
 let candleSeries;
 
@@ -163,8 +154,7 @@ async function loadAccuracy() {
     }
 
         }
-     
-async function loadChart() {
+        async function loadChart() {
 
     try {
 
