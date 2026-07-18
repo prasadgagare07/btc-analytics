@@ -17,7 +17,12 @@ const { startOpenInterest } = require("./services/openInterestService");
 const { startFundingRate } = require("./services/fundingRateService");
 const { startLiquidation } = require("./services/liquidationService");
 const { getLiquidation } = require("./engine/liquidationEngine");
-const { getAccuracy } = require("./engine/accuracyEngine");
+const {
+    addPrediction,
+    checkLastPrediction,
+    getAccuracy
+} = require("./engine/accuracyEngine");
+//const { getAccuracy } = require("./engine/accuracyEngine");
 const { getFundingRate } = require("./engine/fundingRateEngine");
 const { predict } = require("./engine/predictionEngine");
 const { detectPattern } = require("./engine/patternEngine");
@@ -158,11 +163,16 @@ const prediction = predict(
     pattern
 );
 
-addPrediction({
+/*addPrediction({
     ...prediction,
     price: marketState.lastPrice,
     time: Date.now()
-});
+});*/
+
+    addPrediction(
+    prediction.signal,
+    marketState.lastPrice
+);
 
 console.log("Prediction saved:", prediction);
 console.log("History size:", getHistory().length);
@@ -275,9 +285,19 @@ async function startServer() {
     startOpenInterest();
     startFundingRate();
     startLiquidation();
-    setInterval(() => {
+    /*setInterval(() => {
         updateCandle(marketState);
-    }, 1000);
+    },1000);*/
+
+    setInterval(() => {
+
+    updateCandle(marketState);
+
+    checkLastPrediction(
+        marketState.lastPrice
+    );
+
+}, 1000);
 
     app.listen(PORT, () => {
         console.log("==================================");
