@@ -278,6 +278,17 @@ async function initDatabase() {
             );
         `);
 
+        await db.query(`
+    CREATE TABLE IF NOT EXISTS predictions (
+        id SERIAL PRIMARY KEY,
+        prediction VARCHAR(10),
+        price DOUBLE PRECISION,
+        candle_time BIGINT,
+        actual VARCHAR(10),
+        correct BOOLEAN
+    );
+`);
+
         console.log("Database Ready");
 
     } catch (err) {
