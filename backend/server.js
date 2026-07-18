@@ -386,19 +386,18 @@ const actual =
         ? "BUY"
         : "SELL";
 
-    await db.query(
-    `UPDATE predictions
-     SET actual = $1,
-         correct = (prediction = $1)
-     WHERE actual IS NULL
-       AND candle_time < $2`,
-    [
-        actual,
-        previous.time
-    ]
+await db.query(
+`UPDATE predictions
+SET actual = CAST($1 AS VARCHAR(10)),
+    correct = (prediction = CAST($1 AS VARCHAR(10)))
+WHERE actual IS NULL
+AND candle_time < $2`,
+[
+    actual,
+    previous.time
+]
 );
-
-    
+   
 const lastCandle =
     candles[candles.length - 1];
 
