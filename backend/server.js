@@ -169,6 +169,23 @@ const prediction = predict(
     marketState,
     pattern
 );
+    const candles = getCandles().history["1m"];
+
+const lastCandle =
+    candles[candles.length - 1];
+
+await db.query(
+    `INSERT INTO predictions
+    (prediction, price, candle_time)
+    VALUES ($1,$2,$3)`,
+    [
+        prediction.signal,
+        marketState.lastPrice,
+        lastCandle
+            ? lastCandle.time
+            : Date.now()
+    ]
+);
 
 /*addPrediction({
     ...prediction,
