@@ -198,7 +198,7 @@ await db.query(
     marketState.lastPrice
 );*/
 
-    const candles = getCandles().history["1m"];
+    //const candles = getCandles().history["1m"];
 
 const lastCandle =
     candles[candles.length - 1];
