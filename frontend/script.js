@@ -1,3 +1,13 @@
+
+
+            
+candleSeries = chart.addCandlestickSeries();
+            
+        }
+
+        candleSeries.setData(chartData);
+
+    } catch (err) {
 let chart;
 let candleSeries;
 
@@ -78,7 +88,78 @@ async function loadPrediction() {
     }
 
 }
+async function loadAccuracy() {
 
+    try {
+
+        const res = await fetch("/api/accuracy");
+        const data = await res.json();
+
+        document.getElementById("accuracy").innerHTML =
+            data.accuracy + "%";
+
+    } catch (err) {
+
+        console.log(err);
+
+    }
+
+    }
+
+        async function loadOpenInterest() {
+
+    try {
+
+        const res = await fetch("/api/market");
+        const data = await res.json();
+
+        document.getElementById("oi").innerHTML =
+            data.openInterest ?? 0;
+
+    } catch (err) {
+
+        console.log(err);
+
+    }
+
+        }
+
+    async function loadFunding() {
+
+    try {
+
+        const res = await fetch("/api/market");
+        const data = await res.json();
+
+        document.getElementById("funding").innerHTML =
+            data.fundingRate ?? 0;
+
+    } catch (err) {
+
+        console.log(err);
+
+    }
+
+    }
+
+        async function loadLiquidations() {
+
+    try {
+
+        const res = await fetch("/api/market");
+        const data = await res.json();
+
+        document.getElementById("liquidations").innerHTML =
+            data.liquidationSide ?? "None";
+
+    } catch (err) {
+
+        console.log(err);
+
+    }
+
+        }
+        
 async function loadChart() {
 
     try {
@@ -105,16 +186,6 @@ async function loadChart() {
                     height: 400
                 }
             );
-
-            
-candleSeries = chart.addCandlestickSeries();
-            
-        }
-
-        candleSeries.setData(chartData);
-
-    } catch (err) {
-
         console.log(err);
 
     }
@@ -128,6 +199,10 @@ async function refresh() {
     await loadOrderBook();
     await loadIndicators();
     await loadPrediction();
+    await loadAccuracy();
+    await loadOpenInterest();
+    await loadFunding();
+    await loadLiquidations();
     await loadChart();
 
 }
