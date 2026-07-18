@@ -156,7 +156,7 @@ async function loadAccuracy() {
     }
 
         }
-        async function loadChart() {
+async function loadChart() {
 
     try {
 
@@ -188,6 +188,7 @@ async function loadAccuracy() {
                 candleSeries.setData(chartData);
 
 }   
+        
 
 async function refresh() {
 
