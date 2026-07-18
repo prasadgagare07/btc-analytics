@@ -343,9 +343,30 @@ async function startServer() {
     setInterval(() => {
 
     updateCandle(marketState);
-
     const candles = getCandles().history["1m"];
 
+    if (candles.length < 2) return;
+
+const previous = candles[candles.length - 2];
+
+const actual =
+    previous.close > previous.open
+        ? "BUY"
+        : "SELL";
+
+    await db.query(
+    `UPDATE predictions
+     SET actual = $1,
+         correct = (prediction = $1)
+     WHERE actual IS NULL
+       AND candle_time < $2`,
+    [
+        actual,
+        previous.time
+    ]
+);
+
+    
 const lastCandle =
     candles[candles.length - 1];
 
