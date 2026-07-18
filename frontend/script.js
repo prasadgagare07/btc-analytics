@@ -163,8 +163,7 @@ async function loadAccuracy() {
     }
 
         }
-        
-async function loadChart() {
+     async function loadChart() {
 
     try {
 
@@ -190,11 +189,13 @@ async function loadChart() {
                     height: 400
                 }
             );
-        console.log(err);
+        candleSeries = chart.addCandlestickSeries();
 
     }
+                candleSeries.setData(chartData);
 
-}
+}   
+
 
 async function refresh() {
 
