@@ -226,6 +226,26 @@ app.get("/api/dbcount", async (req, res) => {
 
 });
 
+app.get("/api/predictions-count", async (req, res) => {
+
+    try {
+
+        const result = await db.query(
+            "SELECT COUNT(*) FROM predictions"
+        );
+
+        res.json(result.rows[0]);
+
+    } catch (err) {
+
+        res.status(500).json({
+            error: err.message
+        });
+
+    }
+
+});
+
 // Export Candles
 app.get("/api/export", async (req, res) => {
 
