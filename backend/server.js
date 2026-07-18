@@ -187,16 +187,6 @@ await db.query(
     ]
 );
 
-/*addPrediction({
-    ...prediction,
-    price: marketState.lastPrice,
-    time: Date.now()
-});*/
-
-    /*addPrediction(
-    prediction.signal,
-    marketState.lastPrice
-);*/
 
 addAccuracyPrediction(
     prediction.signal,
