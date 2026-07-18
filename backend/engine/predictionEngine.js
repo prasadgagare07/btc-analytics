@@ -189,13 +189,32 @@ else if (score <= -60)
 else
     signal = "HOLD";
 
-    return {
-        signal,
-        confidence:
-    signal === "HOLD"
-        ? 0
-        : Math.min(Math.abs(score), 100),
-    };
+    const price = market.lastPrice || 0;
+
+let entry = price;
+let sl = price;
+let tp = price;
+
+if (signal === "BUY") {
+    sl = price * 0.995;
+    tp = price * 1.010;
+}
+
+if (signal === "SELL") {
+    sl = price * 1.005;
+    tp = price * 0.990;
+}
+
+return {
+    signal,
+    confidence:
+        signal === "HOLD"
+            ? 0
+            : Math.min(Math.abs(score), 100),
+    entry: entry.toFixed(2),
+    sl: sl.toFixed(2),
+    tp: tp.toFixed(2)
+};
 }
 
 module.exports = {
