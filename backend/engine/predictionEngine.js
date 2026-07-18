@@ -108,6 +108,17 @@ if (market.fundingRate !== undefined) {
         score -= 5;
 
 }
+
+    // Open Interest
+if (market.openInterest > 0) {
+
+    if (market.openInterestChange > 0)
+        score += 15;
+
+    if (market.openInterestChange < 0)
+        score -= 15;
+
+}
     
     let signal = "HOLD";
 
