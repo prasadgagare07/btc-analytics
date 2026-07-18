@@ -22,12 +22,30 @@ function predict(data, indicators, market, pattern) {
     } = data;
 
     let score = 0;
+    let bullishTrends = 0;
+    let bearishTrends = 0;
 
     // Multi-timeframe trend
-    score += trend(candles1m) * 20;
-    score += trend(candles3m) * 20;
-    score += trend(candles5m) * 25;
-    score += trend(candles10m) * 35;
+    const t1 = trend(candles1m);
+const t3 = trend(candles3m);
+const t5 = trend(candles5m);
+const t10 = trend(candles10m);
+
+score += t1 * 20;
+score += t3 * 20;
+score += t5 * 25;
+score += t10 * 35;
+
+[t1, t3, t5, t10].forEach(t => {
+    if (t > 0) bullishTrends++;
+    if (t < 0) bearishTrends++;
+});
+
+if (bullishTrends >= 3)
+    score += 25;
+
+if (bearishTrends >= 3)
+    score -= 25;
 
     // EMA
     if (indicators.ema9 > indicators.ema21)
@@ -51,6 +69,12 @@ function predict(data, indicators, market, pattern) {
         score += 15;
     else
         score -= 15;
+
+    // CVD
+if (market.cvd > 0)
+    score += 20;
+else if (market.cvd < 0)
+    score -= 20;
 
 // Order Book Imbalance
 const total = market.buyVolume + market.sellVolume;
@@ -126,17 +150,51 @@ if (market.liquidationSide === "SELL")
 
 if (market.liquidationSide === "BUY")
     score -= 20;
+    // Ignore weak signals
+if (Math.abs(score) < 50) {
+    return {
+        signal: "HOLD",
+        confidence: 0
+    };
+}
+
+    // Signal agreement bonus
+let bullish = 0;
+let bearish = 0;
+
+if (indicators.ema9 > indicators.ema21) bullish++;
+else bearish++;
+
+if (market.delta > 0) bullish++;
+else bearish++;
+
+if (market.cvd > 0) bullish++;
+else bearish++;
+
+if (market.buyVolume > market.sellVolume) bullish++;
+else bearish++;
+
+if (bullish >= 3)
+    score += 20;
+
+if (bearish >= 3)
+    score -= 20;
     
     let signal = "HOLD";
 
-    if (score >= 40)
-        signal = "BUY";
-    else if (score <= -40)
-        signal = "SELL";
+    if (score >= 60)
+    signal = "BUY";
+else if (score <= -60)
+    signal = "SELL";
+else
+    signal = "HOLD";
 
     return {
         signal,
-        confidence: Math.min(Math.abs(score), 100),
+        confidence:
+    signal === "HOLD"
+        ? 0
+        : Math.min(Math.abs(score), 100),
     };
 }
 
