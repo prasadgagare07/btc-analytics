@@ -119,6 +119,13 @@ if (market.openInterest > 0) {
         score -= 15;
 
 }
+
+    // Liquidations
+if (market.liquidationSide === "SELL")
+    score += 20;
+
+if (market.liquidationSide === "BUY")
+    score -= 20;
     
     let signal = "HOLD";
 
