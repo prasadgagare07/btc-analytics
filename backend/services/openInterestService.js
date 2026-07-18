@@ -1,5 +1,8 @@
+/*const https = require("https");
+const { updateOpenInterest } = require("../engine/openInterestEngine")*/
 const https = require("https");
 const { updateOpenInterest } = require("../engine/openInterestEngine");
+const marketState = require("../data/marketState");
 
 function fetchOpenInterest() {
 
@@ -20,6 +23,7 @@ function fetchOpenInterest() {
                     const json = JSON.parse(data);
 
                     updateOpenInterest(json.openInterest);
+                    marketState.openInterest = Number(json.openInterest);
 
                 } catch (err) {
 
