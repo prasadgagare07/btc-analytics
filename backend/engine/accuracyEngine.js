@@ -1,37 +1,59 @@
-let history = [];
+ let predictions = [];
 
-function addResult(prediction, actual) {
+function addPrediction(signal, closePrice) {
 
-    history.push({
-        prediction,
-        actual,
-        correct: prediction === actual
+    predictions.push({
+        signal,
+        closePrice,
+        time: Date.now()
     });
 
-    if (history.length > 1000) {
-        history.shift();
+    if (predictions.length > 1000) {
+        predictions.shift();
     }
+
+}
+
+function checkLastPrediction(currentClose) {
+
+    if (predictions.length === 0) return;
+
+    const last = predictions[predictions.length - 1];
+
+    if (last.checked) return;
+
+    if (last.signal === "BUY")
+        last.correct = currentClose > last.closePrice;
+
+    else if (last.signal === "SELL")
+        last.correct = currentClose < last.closePrice;
+
+    else
+        last.correct = true;
+
+    last.checked = true;
 
 }
 
 function getAccuracy() {
 
-    const total = history.length;
+    const checked = predictions.filter(p => p.checked);
 
-    const correct = history.filter(r => r.correct).length;
+    const correct = checked.filter(p => p.correct);
 
     return {
-        total,
-        correct,
+        total: checked.length,
+        correct: correct.length,
         accuracy:
-            total === 0
+            checked.length === 0
                 ? 0
-                : Number((correct / total * 100).toFixed(2))
+                : Number((correct.length / checked.length * 100).toFixed(2))
     };
 
 }
 
 module.exports = {
-    addResult,
+    addPrediction,
+    checkLastPrediction,
     getAccuracy
 };
