@@ -198,9 +198,6 @@ await db.query(
     marketState.lastPrice
 );*/
 
-//const lastCandle =
-    //candles[candles.length - 1];
-
 addAccuracyPrediction(
     prediction.signal,
     marketState.lastPrice,
