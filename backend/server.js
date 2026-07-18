@@ -17,11 +17,18 @@ const { startOpenInterest } = require("./services/openInterestService");
 const { startFundingRate } = require("./services/fundingRateService");
 const { startLiquidation } = require("./services/liquidationService");
 const { getLiquidation } = require("./engine/liquidationEngine");
-const {
+/*const {
     addPrediction,
     checkLastPrediction,
     getAccuracy
+} = require("./engine/accuracyEngine");*/
+
+const {
+    addPrediction: addAccuracyPrediction,
+    checkLastPrediction,
+    getAccuracy
 } = require("./engine/accuracyEngine");
+
 //const { getAccuracy } = require("./engine/accuracyEngine");
 const { getFundingRate } = require("./engine/fundingRateEngine");
 const { predict } = require("./engine/predictionEngine");
@@ -169,7 +176,12 @@ const prediction = predict(
     time: Date.now()
 });*/
 
-    addPrediction(
+    /*addPrediction(
+    prediction.signal,
+    marketState.lastPrice
+);*/
+
+    addAccuracyPrediction(
     prediction.signal,
     marketState.lastPrice
 );
