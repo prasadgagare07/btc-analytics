@@ -79,7 +79,11 @@ async function loadPrediction() {
         const data = await res.json();
 
         document.getElementById("signal").innerHTML = data.signal;
-        document.getElementById("confidence").innerHTML = data.confidence + "%";
+document.getElementById("confidence").innerHTML = data.confidence + "%";
+
+document.getElementById("entry").innerHTML = data.entry;
+document.getElementById("sl").innerHTML = data.sl;
+document.getElementById("tp").innerHTML = data.tp;
 
     } catch (err) {
 
