@@ -372,7 +372,7 @@ async function startServer() {
         updateCandle(marketState);
     },1000);*/
 
-    setInterval(() => {
+    setInterval(async() => {
 
     updateCandle(marketState);
     const candles = getCandles().history["1m"];
