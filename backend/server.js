@@ -143,7 +143,7 @@ app.get("/api/indicators", (req, res) => {
 
 //predictions
 
-app.get("/api/prediction", (req, res) => {
+app.get("/api/prediction", async (req, res) => {
 
     const candles1m = getCandles().history["1m"];
     const candles3m = aggregate(candles1m, 3);
