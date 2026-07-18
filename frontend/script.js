@@ -1,6 +1,5 @@
 
 
-            
 candleSeries = chart.addCandlestickSeries();
             
         }
