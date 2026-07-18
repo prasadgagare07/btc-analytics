@@ -25,7 +25,7 @@ const { getLiquidation } = require("./engine/liquidationEngine");
 
 const {
     addPrediction: addAccuracyPrediction,
-    checkLastPrediction,
+    checkPrediction,
     getAccuracy
 } = require("./engine/accuracyEngine");
 
@@ -181,9 +181,15 @@ const prediction = predict(
     marketState.lastPrice
 );*/
 
-    addAccuracyPrediction(
+    const candles = getCandles().history["1m"];
+
+const lastCandle =
+    candles[candles.length - 1];
+
+addAccuracyPrediction(
     prediction.signal,
-    marketState.lastPrice
+    marketState.lastPrice,
+    lastCandle ? lastCandle.time : Date.now()
 );
 
 console.log("Prediction saved:", prediction);
@@ -305,9 +311,14 @@ async function startServer() {
 
     updateCandle(marketState);
 
-    checkLastPrediction(
-        marketState.lastPrice
-    );
+    const candles = getCandles().history["1m"];
+
+const lastCandle =
+    candles[candles.length - 1];
+
+if (lastCandle) {
+    checkPrediction(lastCandle);
+}
 
 }, 1000);
 
