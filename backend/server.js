@@ -198,10 +198,10 @@ await db.query(
     marketState.lastPrice
 );*/
 
-    //const candles = getCandles().history["1m"];
+    const candles = getCandles().history["1m"];
 
-const lastCandle =
-    candles[candles.length - 1];
+//const lastCandle =
+    //candles[candles.length - 1];
 
 addAccuracyPrediction(
     prediction.signal,
