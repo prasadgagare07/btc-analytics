@@ -304,71 +304,7 @@ app.get("/api/export", async (req, res) => {
 
 });
 
-// Serve Frontend
-app.use(express.static(path.join(__dirname, "../frontend")));
-
-app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "../frontend/index.html"));
-});
-
-// Initialize Database
-async function initDatabase() {
-
-    try {
-
-        await db.query(`
-            CREATE TABLE IF NOT EXISTS candles (
-                id SERIAL PRIMARY KEY,
-                time BIGINT,
-                open DOUBLE PRECISION,
-                high DOUBLE PRECISION,
-                low DOUBLE PRECISION,
-                close DOUBLE PRECISION,
-                buy_volume DOUBLE PRECISION,
-                sell_volume DOUBLE PRECISION,
-                delta DOUBLE PRECISION,
-                cvd DOUBLE PRECISION,
-                trades INTEGER
-            );
-        `);
-
-        await db.query(`
-    CREATE TABLE IF NOT EXISTS predictions (
-        id SERIAL PRIMARY KEY,
-        prediction VARCHAR(10),
-        price DOUBLE PRECISION,
-        candle_time BIGINT,
-        actual VARCHAR(10),
-        correct BOOLEAN
-    );
-`);
-
-        console.log("Database Ready");
-
-    } catch (err) {
-
-        console.error(err);
-
-    }
-
-}
-
-// Start Server
-async function startServer() {
-
-    await initDatabase();
-
-    const history = await loadCandles();
-
-    loadHistory(history);
-
-    console.log("Loaded candles:", history.length);
-
-    connectBinance();
-    startOpenInterest();
-    startFundingRate();
-    startLiquidation();
-    /*setInterval(() => {
+  /*setInterval(() => {
         updateCandle(marketState);
     },1000);*/
 
@@ -406,6 +342,12 @@ if (lastCandle) {
 }
 
 }, 1000);
+
+    app.use(express.static(path.join(__dirname, "../frontend")));
+
+app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "../frontend/index.html"));
+});
 
     app.listen(PORT, () => {
         console.log("==================================");
