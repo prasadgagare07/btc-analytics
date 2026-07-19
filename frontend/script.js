@@ -188,6 +188,7 @@ chart = LightweightCharts.createChart(container, {
             candleSeries = chart.addSeries(LightweightCharts.CandlestickSeries);
         }
 
+        console.log(chartData.slice(0, 5));
         candleSeries.setData(chartData);
 
     } catch (err) {
