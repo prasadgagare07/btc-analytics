@@ -201,18 +201,20 @@ chart = LightweightCharts.createChart(container, {
         
 
 async function refresh() {
-
-    await loadStatus();
-    await loadMarket();
-    await loadOrderBook();
-    await loadIndicators();
-    await loadPrediction();
-    await loadAccuracy();
-    await loadOpenInterest();
-    await loadFunding();
-    await loadLiquidations();
-    await loadChart();
-
+    try {
+        await loadStatus();
+        await loadMarket();
+        await loadOrderBook();
+        await loadIndicators();
+        await loadPrediction();
+        await loadAccuracy();
+        await loadOpenInterest();
+        await loadFunding();
+        await loadLiquidations();
+        await loadChart();
+    } catch (err) {
+        console.error("Refresh error:", err);
+    }
 }
 
 refresh();
