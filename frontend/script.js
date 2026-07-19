@@ -175,7 +175,6 @@ async function loadAccuracy() {
         
         console.log(candles);
         console.log(candles.length);
-        console.log(chartData);
         
         console.log(window.LightweightCharts);
         console.log(chart);
@@ -188,6 +187,8 @@ async function loadAccuracy() {
     close: Number(c.close)
 }));
 
+        console.log(chartData);
+        
         if (!chart) {
             const container = document.getElementById("priceChart");
 
