@@ -175,7 +175,8 @@ async function loadAccuracy() {
         
         console.log(candles);
         console.log(candles.length);
-
+        console.log(chartData);
+        
         console.log(window.LightweightCharts);
         console.log(chart);
         console.log(candleSeries);
