@@ -172,7 +172,6 @@ async function loadAccuracy() {
     low: Number(c.low),
     close: Number(c.close)
 }));
-        }));
 
         if (!chart) {
             chart = LightweightCharts.createChart(
