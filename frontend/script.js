@@ -156,7 +156,7 @@ async function loadAccuracy() {
     }
 
         }
-async function loadChart() {
+       async function loadChart() {
 
     try {
 
