@@ -191,7 +191,9 @@ chart = LightweightCharts.createChart(container, {
     height: 400
 });
 
-            candleSeries = chart.addCandlestickSeries();
+            console.log(LightweightCharts);
+console.log(chart);
+            
         }
 
         console.log(chartData.slice(0, 5));
