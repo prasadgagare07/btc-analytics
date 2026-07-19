@@ -172,9 +172,13 @@ async function loadAccuracy() {
         const data = await res.json();
 
         const candles = data.history["1m"];
+        
         console.log(candles);
         console.log(candles.length);
-        
+
+        console.log(window.LightweightCharts);
+        console.log(chart);
+        console.log(candleSeries);
         const chartData = candles.map(c => ({
     time: Math.floor(Number(c.time) / 1000),
     open: Number(c.open),
