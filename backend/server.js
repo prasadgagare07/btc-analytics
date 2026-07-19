@@ -308,7 +308,16 @@ app.get("/api/export", async (req, res) => {
         updateCandle(marketState);
     },1000);*/
 
-    setInterval(async() => {
+    
+async function startServer() {
+
+    await loadHistory();
+    connectBinance();
+    startOpenInterest();
+    startFundingRate();
+    startLiquidation();
+
+setInterval(async() => {
 
     updateCandle(marketState);
     const candles = getCandles().history["1m"];
