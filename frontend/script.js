@@ -25,6 +25,7 @@ async function loadMarket() {
 
     } catch (err) {
         console.log(err);
+        alert(err.message);
     }
 }
 
@@ -44,6 +45,7 @@ async function loadOrderBook() {
     } catch (err) {
 
         console.log(err);
+        alert(err.message);
 
     }
 
@@ -60,6 +62,7 @@ async function loadIndicators() {
 
     } catch (err) {
         console.log(err);
+        alert(err.message);
     }
 }
 
@@ -81,6 +84,7 @@ document.getElementById("tp").innerHTML = data.tp;
     } catch (err) {
 
         console.log(err);
+        alert(err.message);
 
     }
 
@@ -98,6 +102,7 @@ async function loadAccuracy() {
     } catch (err) {
 
         console.log(err);
+        alert(err.message);
 
     }
 
@@ -116,6 +121,7 @@ async function loadAccuracy() {
     } catch (err) {
 
         console.log(err);
+        alert(err.message);
 
     }
 
@@ -134,6 +140,7 @@ async function loadAccuracy() {
     } catch (err) {
 
         console.log(err);
+        alert(err.message);
 
     }
 
@@ -152,6 +159,7 @@ async function loadAccuracy() {
     } catch (err) {
 
         console.log(err);
+        alert(err.message);
 
     }
 
@@ -195,6 +203,7 @@ chart = LightweightCharts.createChart(container, {
 
     } catch (err) {
         console.log(err);
+        alert(err.message);
     }
 
 }
@@ -214,6 +223,7 @@ async function refresh() {
         await loadChart();
     } catch (err) {
         console.error("Refresh error:", err);
+        alert(err.message);
     }
 }
 
