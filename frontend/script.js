@@ -164,7 +164,10 @@ async function loadAccuracy() {
         const data = await res.json();
 
         const candles = data.history["1m"];
-
+        console.log(candles);
+        console.log(candles.length);
+        console.log(chartData);
+        
         const chartData = candles.map(c => ({
     time: {
    time: Math.floor(Number(c.time) / 1000),
@@ -186,6 +189,8 @@ chart = LightweightCharts.createChart(container, {
         }
 
         console.log(chartData.slice(0, 5));
+        console.log(chartData[0]);
+        console.log(chartData[chartData.length - 1]);
         candleSeries.setData(chartData);
 
     } catch (err) {
