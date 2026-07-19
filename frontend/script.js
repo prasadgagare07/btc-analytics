@@ -174,13 +174,12 @@ async function loadAccuracy() {
 }));
 
         if (!chart) {
-            chart = LightweightCharts.createChart(
-                document.getElementById("priceChart"),
-                {
-                    width: 600,
-                    height: 400
-                }
-            );
+            const container = document.getElementById("priceChart");
+
+chart = LightweightCharts.createChart(container, {
+    width: container.clientWidth,
+    height: 400
+});
 
             candleSeries = chart.addSeries(LightweightCharts.CandlestickSeries);
         }
