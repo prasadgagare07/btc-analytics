@@ -17,11 +17,6 @@ const { startOpenInterest } = require("./services/openInterestService");
 const { startFundingRate } = require("./services/fundingRateService");
 const { startLiquidation } = require("./services/liquidationService");
 const { getLiquidation } = require("./engine/liquidationEngine");
-/*const {
-    addPrediction,
-    checkLastPrediction,
-    getAccuracy
-} = require("./engine/accuracyEngine");*/
 
 const {
     addPrediction: addAccuracyPrediction,
@@ -29,14 +24,12 @@ const {
     getAccuracy
 } = require("./engine/accuracyEngine");
 
-//const { getAccuracy } = require("./engine/accuracyEngine");
 const { getFundingRate } = require("./engine/fundingRateEngine");
 const { predict } = require("./engine/predictionEngine");
 const { detectPattern } = require("./engine/patternEngine");
 const { analyzeOrderBook } = require("./engine/orderBookEngine");
 const { detectLevels } = require("./engine/supportResistanceEngine");
 const { getOpenInterest } = require("./engine/openInterestEngine");
-//const { addPrediction, getHistory } = require("./data/predictionHistory");
 const { addPrediction, getHistory, getStats } = require("./data/predictionHistory");
 console.log("PredictionHistory module loaded");
 
@@ -311,7 +304,8 @@ app.get("/api/export", async (req, res) => {
     
 async function startServer() {
 
-    await loadHistory();
+    const rows = await loadCandles();
+loadHistory(rows);
     connectBinance();
     startOpenInterest();
     startFundingRate();
