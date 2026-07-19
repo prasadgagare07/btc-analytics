@@ -174,11 +174,9 @@ async function loadAccuracy() {
         const candles = data.history["1m"];
         console.log(candles);
         console.log(candles.length);
-        console.log(chartData);
         
         const chartData = candles.map(c => ({
-    time: {
-   time: Math.floor(Number(c.time) / 1000),
+    time: Math.floor(Number(c.time) / 1000),
     open: Number(c.open),
     high: Number(c.high),
     low: Number(c.low),
