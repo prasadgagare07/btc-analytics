@@ -232,7 +232,7 @@ async function refresh() {
         await loadOpenInterest();
         await loadFunding();
         await loadLiquidations();
-        await loadChart();
+        //await loadChart();
     } catch (err) {
         console.error("Refresh error:", err);
         alert(err.message);
