@@ -191,8 +191,13 @@ chart = LightweightCharts.createChart(container, {
     height: 400
 });
 
-            console.log(LightweightCharts);
-console.log(chart);
+            console.log(chart);
+
+if (typeof chart.addCandlestickSeries === "function") {
+    candleSeries = chart.addCandlestickSeries();
+} else {
+    alert("addCandlestickSeries not found");
+}
             
         }
 
