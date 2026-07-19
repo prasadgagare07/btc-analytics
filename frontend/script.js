@@ -72,7 +72,7 @@ async function loadPrediction() {
 
         const res = await fetch("/api/prediction");
         const data = await res.json();
-        console.log(data);
+        alert(JSON.stringify(data));
 
         document.getElementById("signal").innerHTML = data.signal;
 document.getElementById("confidence").innerHTML = data.confidence + "%";
