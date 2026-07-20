@@ -79,7 +79,9 @@ async function loadPrediction() {
         document.getElementById("entry").textContent = data.entry || "-";
         document.getElementById("sl").textContent = data.sl || "-";
         document.getElementById("tp").textContent = data.tp || "-";
-
+        document.getElementById("reasons").textContent =
+    data.reasons ? data.reasons.join(", ") : "-";
+        
     } catch (err) {
 
         console.log(err);
