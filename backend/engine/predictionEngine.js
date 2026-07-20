@@ -152,12 +152,17 @@ if (market.liquidationSide === "BUY")
     score -= 20;
     // Ignore weak signals
 if (Math.abs(score) < 50) {
+
+    const price = market.lastPrice || 0;
+
     return {
         signal: "HOLD",
-        confidence: 0
+        confidence: 0,
+        entry: price.toFixed(2),
+        sl: "-",
+        tp: "-"
     };
 }
-
     // Signal agreement bonus
 let bullish = 0;
 let bearish = 0;
