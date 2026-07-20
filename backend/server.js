@@ -27,6 +27,10 @@ const {
 const { getFundingRate } = require("./engine/fundingRateEngine");
 const { predict } = require("./engine/predictionEngine");
 const { detectPattern } = require("./engine/patternEngine");
+const {
+    setPrediction,
+    getPrediction
+} = require("./engine/candlePredictionEngine");
 const { analyzeOrderBook } = require("./engine/orderBookEngine");
 const { detectLevels } = require("./engine/supportResistanceEngine");
 const { getOpenInterest } = require("./engine/openInterestEngine");
@@ -194,6 +198,32 @@ const prediction = predict(
     marketState,
     pattern
 );
+
+    const current5m =
+    candles5m[candles5m.length - 1];
+
+if (current5m) {
+
+    setPrediction({
+
+        predictionTime: current5m.time,
+
+        expiryTime:
+            current5m.time + (10 * 60 * 1000),
+
+        openPrice: current5m.open,
+
+        signal: prediction.signal,
+
+        confidence: prediction.confidence,
+
+        reasons: prediction.reasons,
+
+        status: "Pending"
+
+    });
+
+}
     const candles = getCandles().history["1m"];
 
 const lastCandle =
@@ -352,6 +382,12 @@ app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "../frontend/index.html"));
 });
 
+app.get("/api/candleprediction", (req, res) => {
+
+    res.json(getPrediction());
+
+});
+    
     app.listen(PORT, () => {
         console.log("==================================");
         console.log("BTC Analytics Server Started");
