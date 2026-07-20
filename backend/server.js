@@ -41,10 +41,10 @@ const { startLiquidation } = require("./services/liquidationService");
 const { getLiquidation } = require("./engine/liquidationEngine");
 
 const {
-    addPrediction: addAccuracyPrediction,
-    checkPrediction,
-    getAccuracy
-} = require("./engine/accuracyEngine");
+    setPrediction,
+    getPrediction,
+    checkPrediction: checkCandlePrediction
+} = require("./engine/candlePredictionEngine");
 
 const { getFundingRate } = require("./engine/fundingRateEngine");
 const { predict } = require("./engine/predictionEngine");
@@ -224,7 +224,7 @@ const prediction = predict(
 
     const current5m =
     candles5m[candles5m.length - 1];
-    checkPrediction(current5m);
+    checkCandlePrediction(current5m);
 
 if (current5m) {
 
@@ -395,7 +395,7 @@ const lastCandle =
     candles[candles.length - 1];
 
 if (lastCandle) {
-    checkPrediction(lastCandle);
+    checkCandlePrediction(lastCandle);   
 }
 
 }, 1000);
