@@ -257,21 +257,21 @@ if (signal !== "HOLD") {
     if (confidence < 55) confidence = 55;
 }
 
-let tradeDuration = "Unknown";
+let tradeDuration = "-";
 
 if (signal === "BUY" || signal === "SELL") {
-
-    if (t10 !== 0 && t5 !== 0 && t3 !== 0 && t1 !== 0) {
-        tradeDuration = "30-120 min";
-    }
-    else if (t5 !== 0 && t3 !== 0) {
-        tradeDuration = "5-30 min";
-    }
-    else {
-        tradeDuration = "1-5 min";
-    }
-
+    tradeDuration = "Next 5-minute candle (10 min expiry)";
 }
+
+    let target = "-";
+
+if (signal === "BUY") {
+    target = "Close ABOVE candle open";
+}
+else if (signal === "SELL") {
+    target = "Close BELOW candle open";
+}
+
     
 return {
     signal,
@@ -279,6 +279,7 @@ return {
     entry: entry.toFixed(2),
     sl: sl.toFixed(2),
     tp: tp.toFixed(2),
+    target,
     reasons,
     tradeDuration
 };
