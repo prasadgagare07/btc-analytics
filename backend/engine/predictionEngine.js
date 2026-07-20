@@ -257,13 +257,30 @@ if (signal !== "HOLD") {
     if (confidence < 55) confidence = 55;
 }
 
+let tradeDuration = "Unknown";
+
+if (signal === "BUY" || signal === "SELL") {
+
+    if (t10 !== 0 && t5 !== 0 && t3 !== 0 && t1 !== 0) {
+        tradeDuration = "30-120 min";
+    }
+    else if (t5 !== 0 && t3 !== 0) {
+        tradeDuration = "5-30 min";
+    }
+    else {
+        tradeDuration = "1-5 min";
+    }
+
+}
+    
 return {
     signal,
     confidence,
     entry: entry.toFixed(2),
     sl: sl.toFixed(2),
     tp: tp.toFixed(2),
-    reasons
+    reasons,
+    tradeDuration
 };
 }
 
