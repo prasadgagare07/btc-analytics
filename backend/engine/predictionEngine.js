@@ -27,6 +27,7 @@ function predict(data, indicators, market, pattern) {
     let bullishTrends = 0;
     let bearishTrends = 0;
     let confirmations = 0;
+    let reasons = [];
 
     // Multi-timeframe trend
     const t1 = trend(candles1m);
@@ -64,6 +65,7 @@ if (bullishTrends === 2 && bearishTrends === 2)
     if (indicators.ema9 > indicators.ema21) {
     score += 20;
     confirmations++;
+    reasons.push("EMA Bullish");
 } else {
     score -= 20;
 }
@@ -73,32 +75,38 @@ if (bullishTrends === 2 && bearishTrends === 2)
 if (indicators.rsi > 60) {
     score += 15;
     confirmations++;
+    reasons.push("RSI Strong");
 } else if (indicators.rsi < 40) {
     score -= 15;
 }
-    // Order flow
-    if (market.buyVolume > market.sellVolume) {
+    // Buy Volume Block
+    
+if (market.buyVolume > market.sellVolume) {
     score += 15;
     confirmations++;
+    reasons.push("Buy Volume");
 } else {
     score -= 15;
 }
-
+    //Delta Block     
     if (market.delta > 0) {
     score += 15;
     confirmations++;
+    reasons.push("Positive Delta");
 } else {
     score -= 15;
 }
 
     // CVD
+
 if (market.cvd > 0) {
     score += 20;
     confirmations++;
-}
-else if (market.cvd < 0)
+    reasons.push("Positive CVD");
+} else if (market.cvd < 0) {
     score -= 20;
-
+}
+    
 // Order Book Imbalance
 const total = market.buyVolume + market.sellVolume;
 
@@ -254,7 +262,8 @@ return {
     confidence,
     entry: entry.toFixed(2),
     sl: sl.toFixed(2),
-    tp: tp.toFixed(2)
+    tp: tp.toFixed(2),
+    reasons
 };
 }
 
