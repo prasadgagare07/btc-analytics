@@ -74,12 +74,11 @@ async function loadPrediction() {
         const data = await res.json();
         alert(JSON.stringify(data));
 
-        document.getElementById("signal").innerHTML = data.signal;
-document.getElementById("confidence").innerHTML = data.confidence + "%";
-
-document.getElementById("entry").innerHTML = data.entry;
-document.getElementById("sl").innerHTML = data.sl;
-document.getElementById("tp").innerHTML = data.tp;
+        document.getElementById("signal").textContent = data.signal || "-";
+        document.getElementById("confidence").textContent = (data.confidence ?? 0) + "%";
+        document.getElementById("entry").textContent = data.entry || "-";
+        document.getElementById("sl").textContent = data.sl || "-";
+        document.getElementById("tp").textContent = data.tp || "-";
 
     } catch (err) {
 
