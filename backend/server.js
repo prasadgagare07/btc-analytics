@@ -8,6 +8,28 @@ const path = require("path");
 const fs = require("fs");
 const db = require("./database/db");
 
+(async () => {
+    try {
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS candle_predictions (
+                id SERIAL PRIMARY KEY,
+                prediction_time BIGINT,
+                expiry_time BIGINT,
+                open_price DOUBLE PRECISION,
+                close_price DOUBLE PRECISION,
+                signal TEXT,
+                confidence INT,
+                result TEXT,
+                created_at TIMESTAMP DEFAULT NOW()
+            );
+        `);
+
+        console.log("✅ candle_predictions table created");
+    } catch (err) {
+        console.log(err.message);
+    }
+})();
+
 const { loadCandles } = require("./database/candleRepository");
 const { connectBinance } = require("./websocket/binanceSocket");
 const { updateCandle, getCandles, loadHistory } = require("./engine/candleEngine");
