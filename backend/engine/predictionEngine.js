@@ -49,6 +49,16 @@ if (bullishTrends >= 3)
 if (bearishTrends >= 3)
     score -= 25;
 
+// Strong trend bonus
+if (bullishTrends === 4)
+    score += 20;
+
+if (bearishTrends === 4)
+    score -= 20;
+
+// Weak trend penalty
+if (bullishTrends === 2 && bearishTrends === 2)
+    score = Math.floor(score * 0.6);
     // EMA
     if (indicators.ema9 > indicators.ema21)
         score += 20;
