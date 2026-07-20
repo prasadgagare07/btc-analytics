@@ -382,11 +382,8 @@ setInterval(async() => {
     db,
     marketState
 );
-    
-}
 
-    
-    if (candles.length < 2) return;
+if (candles.length < 2) return;
 
 const now = Date.now();
 
@@ -477,6 +474,18 @@ app.get("/api/candleprediction", (req, res) => {
     res.json(getPrediction());
 
 });
+    app.get("/api/candle-history", async (req, res) => {
+
+    const result = await db.query(`
+        SELECT *
+        FROM candle_predictions
+        ORDER BY prediction_time DESC
+        LIMIT 100
+    `);
+
+    res.json(result.rows);
+
+});
     
     app.listen(PORT, () => {
         console.log("==================================");
@@ -486,15 +495,6 @@ app.get("/api/candleprediction", (req, res) => {
     });
 
 }
-
-app.get("/api/candle-history", async (req, res) => {
-
-    const result = await db.query(`
-        SELECT *
-        FROM candle_predictions
-        ORDER BY prediction_time DESC
-        LIMIT 100
-    `);
 
     res.json(result.rows);
 
