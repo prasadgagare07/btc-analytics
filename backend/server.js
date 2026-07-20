@@ -29,7 +29,9 @@ const db = require("./database/db");
         console.log(err.message);
     }
 })();
-
+const {
+    runScheduler
+} = require("./engine/candleScheduler");
 const { loadCandles } = require("./database/candleRepository");
 const { connectBinance } = require("./websocket/binanceSocket");
 const { updateCandle, getCandles, loadHistory } = require("./engine/candleEngine");
@@ -343,6 +345,11 @@ setInterval(async() => {
 
     updateCandle(marketState);
     const candles = getCandles().history["1m"];
+    await runScheduler(
+    candles,
+    marketState,
+    db
+);
     const candles5m = aggregate(candles, 5);
 
 const current5m = candles5m[candles5m.length - 1];
