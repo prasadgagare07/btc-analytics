@@ -32,6 +32,9 @@ const db = require("./database/db");
 const {
     runScheduler
 } = require("./engine/candleScheduler");
+const {
+    checkResults
+} = require("./engine/resultChecker");
 const { loadCandles } = require("./database/candleRepository");
 const { connectBinance } = require("./websocket/binanceSocket");
 const { updateCandle, getCandles, loadHistory } = require("./engine/candleEngine");
@@ -301,6 +304,29 @@ app.get("/api/predictions-count", async (req, res) => {
 
 });
 
+app.get("/api/latest-candleprediction", async (req, res) => {
+
+    try {
+
+        const result = await db.query(`
+            SELECT *
+            FROM candle_predictions
+            ORDER BY prediction_time DESC
+            LIMIT 1
+        `);
+
+        res.json(result.rows[0] || {});
+
+    } catch (err) {
+
+        res.status(500).json({
+            error: err.message
+        });
+
+    }
+
+});
+
 // Export Candles
 app.get("/api/export", async (req, res) => {
 
@@ -349,6 +375,10 @@ setInterval(async() => {
     candles,
     marketState,
     db
+);
+    await checkResults(
+    db,
+    marketState
 );
     const candles5m = aggregate(candles, 5);
 
