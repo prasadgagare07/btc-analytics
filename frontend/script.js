@@ -131,6 +131,10 @@ async function loadActivePredictions() {
 
                 <p><b>Status:</b> ${p.result}</p>
 
+                <p><b>Remaining:</b>
+                <span id="timer-${p.id}"></span>
+                </p>
+
             </div>
 
             `;
@@ -147,6 +151,15 @@ async function loadActivePredictions() {
             "activePredictions"
         ).innerHTML = html;
 
+        predictions.forEach(p => {
+
+    startPredictionTimer(
+        p.id,
+        Number(p.expiry_time)
+    );
+
+});
+
     }
 
     catch (err) {
@@ -154,6 +167,39 @@ async function loadActivePredictions() {
         console.log(err);
 
     }
+
+}
+
+function startPredictionTimer(id, expiryTime) {
+
+    function update() {
+
+        const remaining = expiryTime - Date.now();
+
+        const element = document.getElementById(`timer-${id}`);
+
+        if (!element) return;
+
+        if (remaining <= 0) {
+
+            element.innerHTML = "Expired";
+
+            return;
+
+        }
+
+        const min = Math.floor(remaining / 60000);
+
+        const sec = Math.floor((remaining % 60000) / 1000);
+
+        element.innerHTML =
+            `${min}:${sec.toString().padStart(2, "0")}`;
+
+    }
+
+    update();
+
+    setInterval(update, 1000);
 
 }
 
