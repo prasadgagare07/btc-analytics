@@ -382,52 +382,7 @@ setInterval(async() => {
     db,
     marketState
 );
-    const candles5m = aggregate(candles, 5);
-
-const current5m = candles5m[candles5m.length - 1];
-
-if (
-    current5m &&
-    current5m.time !== last5mPredictionTime
-) {
-
-    last5mPredictionTime = current5m.time;
-
-    const indicators = {
-        ema9: calculateEMA(candles, 9),
-        ema21: calculateEMA(candles, 21),
-        rsi: calculateRSI(candles)
-    };
-
-    const pattern = detectPattern(candles);
-
-    const prediction = predict(
-        {
-            candles1m: candles,
-            candles3m: aggregate(candles, 3),
-            candles5m,
-            candles10m: aggregate(candles, 10)
-        },
-        indicators,
-        marketState,
-        pattern
-    );
-
-    setPrediction({
-        predictionTime: current5m.time,
-        expiryTime: current5m.time + (10 * 60 * 1000),
-        openPrice: current5m.open,
-        signal: prediction.signal,
-        confidence: prediction.confidence,
-        status: "Pending"
-    });
-
-    console.log(
-        "✅ New 5-minute prediction:",
-        prediction.signal,
-        "Time:",
-        new Date(current5m.time).toLocaleTimeString()
-    );
+    
 }
 
     
