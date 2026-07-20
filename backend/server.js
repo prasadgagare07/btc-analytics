@@ -227,25 +227,19 @@ const prediction = predict(
 
 if (current5m) {
 
-    setPrediction({
-
-        predictionTime: current5m.time,
-
-        expiryTime:
-            current5m.time + (10 * 60 * 1000),
-
-        openPrice: current5m.open,
-
-        signal: prediction.signal,
-
-        confidence: prediction.confidence,
-
-        reasons: prediction.reasons,
-
-        status: "Pending"
-
-    });
-
+    
+await db.query(
+`INSERT INTO candle_predictions
+(prediction_time, expiry_time, open_price, signal, confidence, result)
+VALUES ($1,$2,$3,$4,$5,'PENDING')`,
+[
+    current5m.time,
+    current5m.time + (10 * 60 * 1000),
+    current5m.open,
+    prediction.signal,
+    prediction.confidence
+]
+);
 }
     const candles = getCandles().history["1m"];
 
@@ -393,6 +387,26 @@ AND candle_time < $2`,
 const lastCandle =
     candles[candles.length - 1];
 
+    await db.query(
+`
+UPDATE candle_predictions
+SET
+close_price = $1,
+result =
+CASE
+WHEN signal='BUY' AND $1 > open_price THEN 'WIN'
+WHEN signal='SELL' AND $1 < open_price THEN 'WIN'
+ELSE 'LOSS'
+END
+WHERE result='PENDING'
+AND expiry_time <= $2
+`,
+[
+    lastCandle.close,
+    lastCandle.time
+]
+);
+
 if (lastCandle) {
     checkCandlePrediction(lastCandle);   
 }
@@ -419,5 +433,18 @@ app.get("/api/candleprediction", (req, res) => {
     });
 
 }
+
+app.get("/api/candle-history", async (req, res) => {
+
+    const result = await db.query(`
+        SELECT *
+        FROM candle_predictions
+        ORDER BY prediction_time DESC
+        LIMIT 100
+    `);
+
+    res.json(result.rows);
+
+});        
 
 startServer();
