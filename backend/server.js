@@ -29,7 +29,8 @@ const { predict } = require("./engine/predictionEngine");
 const { detectPattern } = require("./engine/patternEngine");
 const {
     setPrediction,
-    getPrediction
+    getPrediction,
+    checkPrediction
 } = require("./engine/candlePredictionEngine");
 const { analyzeOrderBook } = require("./engine/orderBookEngine");
 const { detectLevels } = require("./engine/supportResistanceEngine");
@@ -201,6 +202,7 @@ const prediction = predict(
 
     const current5m =
     candles5m[candles5m.length - 1];
+    checkPrediction(current5m);
 
 if (current5m) {
 
