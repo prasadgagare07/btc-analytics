@@ -92,6 +92,40 @@ async function loadPrediction() {
     }
 
 }
+
+async function loadLatestPrediction() {
+
+    try {
+
+        const res = await fetch("/api/latest-candleprediction");
+
+        const data = await res.json();
+
+        if (!data.id) return;
+
+        document.getElementById("predTime").innerHTML =
+            new Date(Number(data.prediction_time)).toLocaleTimeString();
+
+        document.getElementById("predExpiry").innerHTML =
+            new Date(Number(data.expiry_time)).toLocaleTimeString();
+
+        document.getElementById("predSignal").innerHTML =
+            data.signal;
+
+        document.getElementById("predConfidence").innerHTML =
+            data.confidence + "%";
+
+        document.getElementById("predStatus").innerHTML =
+            data.result;
+
+    } catch (err) {
+
+        console.log(err);
+
+    }
+
+}
+
 async function loadAccuracy() {
 
     try {
@@ -231,6 +265,7 @@ async function refresh() {
         await loadOrderBook();
         await loadIndicators();
         await loadPrediction();
+        await loadLatestPrediction();
         await loadAccuracy();
         await loadOpenInterest();
         await loadFunding();
