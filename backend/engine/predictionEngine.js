@@ -1,3 +1,5 @@
+const { calculateATR } = require("./atrEngine");
+
 function trend(candles) {
 
     if (!candles || candles.length < 2) return 0;
@@ -27,9 +29,9 @@ function predict(data, indicators, market, pattern) {
 
     // Multi-timeframe trend
     const t1 = trend(candles1m);
-const t3 = trend(candles3m);
-const t5 = trend(candles5m);
-const t10 = trend(candles10m);
+    const t3 = trend(candles3m);
+    const t5 = trend(candles5m);
+    const t10 = trend(candles10m);
 
 score += t1 * 20;
 score += t3 * 20;
@@ -200,14 +202,19 @@ let entry = price;
 let sl = price;
 let tp = price;
 
+const atr = calculateATR(candles1m);
+
+const stopDistance = atr > 0 ? atr * 1.5 : price * 0.005;
+const targetDistance = atr > 0 ? atr * 3 : price * 0.01;
+
 if (signal === "BUY") {
-    sl = price * 0.995;
-    tp = price * 1.010;
+    sl = price - stopDistance;
+    tp = price + targetDistance;
 }
 
 if (signal === "SELL") {
-    sl = price * 1.005;
-    tp = price * 0.990;
+    sl = price + stopDistance;
+    tp = price - targetDistance;
 }
 
 return {
