@@ -62,6 +62,7 @@ console.log("PredictionHistory module loaded");
 const app = express();
 
 const PORT = process.env.PORT || 10000;
+let last5mPredictionTime = 0;
 
 app.use(cors());
 app.use(express.json());
@@ -221,26 +222,6 @@ const prediction = predict(
     pattern
 );
 
-    const current5m =
-    candles5m[candles5m.length - 1];
-    checkCandlePrediction(current5m);
-
-if (current5m) {
-
-    
-await db.query(
-`INSERT INTO candle_predictions
-(prediction_time, expiry_time, open_price, signal, confidence, result)
-VALUES ($1,$2,$3,$4,$5,'PENDING')`,
-[
-    current5m.time,
-    current5m.time + (10 * 60 * 1000),
-    current5m.open,
-    prediction.signal,
-    prediction.confidence
-]
-);
-}
     const candles = getCandles().history["1m"];
 
 const lastCandle =
@@ -362,7 +343,55 @@ setInterval(async() => {
 
     updateCandle(marketState);
     const candles = getCandles().history["1m"];
+    const candles5m = aggregate(candles, 5);
 
+const current5m = candles5m[candles5m.length - 1];
+
+if (
+    current5m &&
+    current5m.time !== last5mPredictionTime
+) {
+
+    last5mPredictionTime = current5m.time;
+
+    const indicators = {
+        ema9: calculateEMA(candles, 9),
+        ema21: calculateEMA(candles, 21),
+        rsi: calculateRSI(candles)
+    };
+
+    const pattern = detectPattern(candles);
+
+    const prediction = predict(
+        {
+            candles1m: candles,
+            candles3m: aggregate(candles, 3),
+            candles5m,
+            candles10m: aggregate(candles, 10)
+        },
+        indicators,
+        marketState,
+        pattern
+    );
+
+    setPrediction({
+        predictionTime: current5m.time,
+        expiryTime: current5m.time + (10 * 60 * 1000),
+        openPrice: current5m.open,
+        signal: prediction.signal,
+        confidence: prediction.confidence,
+        status: "Pending"
+    });
+
+    console.log(
+        "✅ New 5-minute prediction:",
+        prediction.signal,
+        "Time:",
+        new Date(current5m.time).toLocaleTimeString()
+    );
+}
+
+    
     if (candles.length < 2) return;
 
 const previous = candles[candles.length - 2];
