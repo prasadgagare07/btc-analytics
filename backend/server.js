@@ -498,6 +498,6 @@ app.get("/api/candleprediction", (req, res) => {
 
     res.json(result.rows);
 
-});        
+} 
 
 startServer();
