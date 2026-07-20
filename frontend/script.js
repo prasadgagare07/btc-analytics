@@ -119,6 +119,7 @@ async function loadLatestPrediction() {
 
         document.getElementById("predStatus").innerHTML =
             data.result;
+        startCountdown(Number(data.expiry_time));
 
     } catch (err) {
 
@@ -258,7 +259,33 @@ if (typeof chart.addCandlestickSeries === "function") {
     }
 
 }
-        
+
+function startCountdown(expiryTime) {
+
+    function update() {
+
+        const now = Date.now();
+
+        const remaining = expiryTime - now;
+
+        if (remaining <= 0) {
+            document.getElementById("countdown").innerHTML = "Expired";
+            return;
+        }
+
+        const minutes = Math.floor(remaining / 60000);
+        const seconds = Math.floor((remaining % 60000) / 1000);
+
+        document.getElementById("countdown").innerHTML =
+            `${minutes}:${seconds.toString().padStart(2, "0")}`;
+
+    }
+
+    update();
+
+    setInterval(update, 1000);
+
+}
 
 async function refresh() {
     try {
