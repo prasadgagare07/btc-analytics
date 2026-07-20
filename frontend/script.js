@@ -80,7 +80,9 @@ async function loadPrediction() {
         document.getElementById("sl").textContent = data.sl || "-";
         document.getElementById("tp").textContent = data.tp || "-";
         document.getElementById("reasons").textContent =
-    data.reasons ? data.reasons.join(", ") : "-";
+        data.reasons ? data.reasons.join(", ") : "-";
+        document.getElementById("tradeDuration").textContent =
+        data.tradeDuration || "-";
         
     } catch (err) {
 
