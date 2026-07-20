@@ -95,33 +95,61 @@ async function loadPrediction() {
 
 }
 
-async function loadLatestPrediction() {
+async function loadActivePredictions() {
 
     try {
 
-        const res = await fetch("/api/latest-candleprediction");
+        const res =
+            await fetch("/api/active-predictions");
 
-        const data = await res.json();
+        const predictions =
+            await res.json();
 
-        if (!data.id) return;
+        let html = "";
 
-        document.getElementById("predTime").innerHTML =
-            new Date(Number(data.prediction_time)).toLocaleTimeString();
+        predictions.forEach(p => {
 
-        document.getElementById("predExpiry").innerHTML =
-            new Date(Number(data.expiry_time)).toLocaleTimeString();
+            const predictionTime =
+                new Date(Number(p.prediction_time))
+                .toLocaleTimeString();
 
-        document.getElementById("predSignal").innerHTML =
-            data.signal;
+            const expiryTime =
+                new Date(Number(p.expiry_time))
+                .toLocaleTimeString();
 
-        document.getElementById("predConfidence").innerHTML =
-            data.confidence + "%";
+            html += `
 
-        document.getElementById("predStatus").innerHTML =
-            data.result;
-        startCountdown(Number(data.expiry_time));
+            <div style="margin-bottom:15px;padding-bottom:10px;border-bottom:1px solid #444;">
 
-    } catch (err) {
+                <p><b>Signal:</b> ${p.signal}</p>
+
+                <p><b>Confidence:</b> ${p.confidence}%</p>
+
+                <p><b>Prediction:</b> ${predictionTime}</p>
+
+                <p><b>Expiry:</b> ${expiryTime}</p>
+
+                <p><b>Status:</b> ${p.result}</p>
+
+            </div>
+
+            `;
+
+        });
+
+        if (predictions.length === 0) {
+
+            html = "No active predictions";
+
+        }
+
+        document.getElementById(
+            "activePredictions"
+        ).innerHTML = html;
+
+    }
+
+    catch (err) {
 
         console.log(err);
 
@@ -294,7 +322,7 @@ async function refresh() {
         await loadOrderBook();
         await loadIndicators();
         await loadPrediction();
-        await loadLatestPrediction();
+        await loadActivePredictions();
         await loadAccuracy();
         await loadOpenInterest();
         await loadFunding();
