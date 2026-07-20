@@ -31,10 +31,18 @@ async function runScheduler(
     if (!current5m)
         return;
 
-    if (current5m.time === lastPredictionTime)
+    const predictionTime =
+        Math.floor(
+            current5m.time / (5 * 60 * 1000)
+        ) * (5 * 60 * 1000);
+
+    const expiryTime =
+        predictionTime + (10 * 60 * 1000);
+
+    if (predictionTime === lastPredictionTime)
         return;
 
-    lastPredictionTime = current5m.time;
+    lastPredictionTime = predictionTime;
 
     const indicators = {
 
@@ -80,9 +88,9 @@ async function runScheduler(
 
         [
 
-            current5m.time,
+            predictionTime,
 
-            current5m.time + 600000,
+            expiryTime,
 
             current5m.open,
 
