@@ -237,32 +237,7 @@ if (signal === "SELL") {
     sl = price + stopDistance;
     tp = price - targetDistance;
 }
-let confidence = 0;
 
-if (signal !== "HOLD") {
-
-    const strength = Math.abs(score);
-
-    if (confirmations >= 8)
-    confidence += 5;
-
-if (confirmations >= 10)
-    confidence += 5;
-
-confidence = Math.min(confidence, 95);
-    else if (strength >= 160)
-        confidence = 90;
-    else if (strength >= 140)
-        confidence = 85;
-    else if (strength >= 120)
-        confidence = 80;
-    else if (strength >= 100)
-        confidence = 75;
-    else if (strength >= 80)
-        confidence = 70;
-    else
-        confidence = 60;
-}
 let confidence = 0;
 
 if (signal !== "HOLD") {
