@@ -25,7 +25,7 @@ async function loadMarket() {
 
     } catch (err) {
         console.log(err);
-        alert(err.message);
+        //alert(err.message);
     }
 }
 
@@ -45,7 +45,7 @@ async function loadOrderBook() {
     } catch (err) {
 
         console.log(err);
-        alert(err.message);
+        //alert(err.message);
 
     }
 
@@ -72,7 +72,7 @@ async function loadPrediction() {
 
         const res = await fetch("/api/prediction");
         const data = await res.json();
-        alert(JSON.stringify(data));
+        //alert(JSON.stringify(data));
 
         document.getElementById("signal").textContent = data.signal || "-";
         document.getElementById("confidence").textContent = (data.confidence ?? 0) + "%";
@@ -120,7 +120,7 @@ async function loadAccuracy() {
     } catch (err) {
 
         console.log(err);
-        alert(err.message);
+        //alert(err.message);
 
     }
 
@@ -139,7 +139,7 @@ async function loadAccuracy() {
     } catch (err) {
 
         console.log(err);
-        alert(err.message);
+        //alert(err.message);
 
     }
 
@@ -158,7 +158,7 @@ async function loadAccuracy() {
     } catch (err) {
 
         console.log(err);
-        alert(err.message);
+        //alert(err.message);
 
     }
 
@@ -213,8 +213,8 @@ if (typeof chart.addCandlestickSeries === "function") {
 
     } catch (err) {
         console.error(err);
-        alert(err.stack);
-        alert(err.message);
+        //alert(err.stack);
+        //alert(err.message);
     }
 
 }
