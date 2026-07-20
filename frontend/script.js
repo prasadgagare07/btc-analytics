@@ -77,6 +77,7 @@ async function loadPrediction() {
         document.getElementById("signal").textContent = data.signal || "-";
         document.getElementById("confidence").textContent = (data.confidence ?? 0) + "%";
         document.getElementById("entry").textContent = data.entry || "-";
+        document.getElementById("target").innerHTML = data.target;
         //document.getElementById("sl").textContent = data.sl || "-";
         //document.getElementById("tp").textContent = data.tp || "-";
         document.getElementById("target").innerHTML = data.target;
