@@ -26,6 +26,7 @@ function predict(data, indicators, market, pattern) {
     let score = 0;
     let bullishTrends = 0;
     let bearishTrends = 0;
+    let confirmations = 0;
 
     // Multi-timeframe trend
     const t1 = trend(candles1m);
@@ -60,31 +61,41 @@ if (bearishTrends === 4)
 if (bullishTrends === 2 && bearishTrends === 2)
     score = Math.floor(score * 0.6);
     // EMA
-    if (indicators.ema9 > indicators.ema21)
-        score += 20;
-    else
-        score -= 20;
+    if (indicators.ema9 > indicators.ema21) {
+    score += 20;
+    confirmations++;
+} else {
+    score -= 20;
+}
 
     // RSI
-    if (indicators.rsi > 60)
-        score += 15;
-    else if (indicators.rsi < 40)
-        score -= 15;
-
+    
+if (indicators.rsi > 60) {
+    score += 15;
+    confirmations++;
+} else if (indicators.rsi < 40) {
+    score -= 15;
+}
     // Order flow
-    if (market.buyVolume > market.sellVolume)
-        score += 15;
-    else
-        score -= 15;
+    if (market.buyVolume > market.sellVolume) {
+    score += 15;
+    confirmations++;
+} else {
+    score -= 15;
+}
 
-    if (market.delta > 0)
-        score += 15;
-    else
-        score -= 15;
+    if (market.delta > 0) {
+    score += 15;
+    confirmations++;
+} else {
+    score -= 15;
+}
 
     // CVD
-if (market.cvd > 0)
+if (market.cvd > 0) {
     score += 20;
+    confirmations++;
+}
 else if (market.cvd < 0)
     score -= 20;
 
@@ -232,8 +243,13 @@ if (signal !== "HOLD") {
 
     const strength = Math.abs(score);
 
-    if (strength >= 180)
-        confidence = 95;
+    if (confirmations >= 8)
+    confidence += 5;
+
+if (confirmations >= 10)
+    confidence += 5;
+
+confidence = Math.min(confidence, 95);
     else if (strength >= 160)
         confidence = 90;
     else if (strength >= 140)
