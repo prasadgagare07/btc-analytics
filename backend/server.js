@@ -49,11 +49,6 @@ const {
 const { getFundingRate } = require("./engine/fundingRateEngine");
 const { predict } = require("./engine/predictionEngine");
 const { detectPattern } = require("./engine/patternEngine");
-const {
-    setPrediction,
-    getPrediction,
-    checkPrediction
-} = require("./engine/candlePredictionEngine");
 const { analyzeOrderBook } = require("./engine/orderBookEngine");
 const { detectLevels } = require("./engine/supportResistanceEngine");
 const { getOpenInterest } = require("./engine/openInterestEngine");
