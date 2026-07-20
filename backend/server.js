@@ -394,24 +394,54 @@ if (
     
     if (candles.length < 2) return;
 
-const previous = candles[candles.length - 2];
+const now = Date.now();
 
-const actual =
-    previous.close > previous.open
-        ? "BUY"
-        : "SELL";
+const pending = await db.query(`
+SELECT *
+FROM candle_predictions
+WHERE result = 'PENDING'
+AND expiry_time <= $1
+`, [now]);
 
-await db.query(
-`UPDATE predictions
-SET actual = CAST($1 AS VARCHAR(10)),
-    correct = (prediction = CAST($1 AS VARCHAR(10)))
-WHERE actual IS NULL
-AND candle_time < $2`,
-[
-    actual,
-    previous.time
-]
-);
+for (const row of pending.rows) {
+
+    const currentPrice = marketState.lastPrice;
+
+    let result = "LOSS";
+
+    if (
+        row.signal === "BUY" &&
+        currentPrice > row.open_price
+    ) {
+        result = "WIN";
+    }
+
+    if (
+        row.signal === "SELL" &&
+        currentPrice < row.open_price
+    ) {
+        result = "WIN";
+    }
+
+    await db.query(
+        `
+        UPDATE candle_predictions
+        SET
+            close_price = $1,
+            result = $2
+        WHERE id = $3
+        `,
+        [
+            currentPrice,
+            result,
+            row.id
+        ]
+    );
+
+    console.log(
+        `Prediction #${row.id}: ${result}`
+    );
+}
    
 const lastCandle =
     candles[candles.length - 1];
