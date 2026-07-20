@@ -304,18 +304,19 @@ app.get("/api/predictions-count", async (req, res) => {
 
 });
 
-app.get("/api/latest-candleprediction", async (req, res) => {
+
+app.get("/api/active-predictions", async (req, res) => {
 
     try {
 
         const result = await db.query(`
             SELECT *
             FROM candle_predictions
-            ORDER BY prediction_time DESC
-            LIMIT 1
+            WHERE result = 'PENDING'
+            ORDER BY prediction_time ASC
         `);
 
-        res.json(result.rows[0] || {});
+        res.json(result.rows);
 
     } catch (err) {
 
