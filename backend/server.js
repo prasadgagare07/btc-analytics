@@ -313,6 +313,7 @@ app.get("/api/active-predictions", async (req, res) => {
             SELECT *
             FROM candle_predictions
             WHERE result = 'PENDING'
+            AND expiry_time > EXTRACT(EPOCH FROM NOW()) * 1000
             ORDER BY prediction_time ASC
         `);
 
