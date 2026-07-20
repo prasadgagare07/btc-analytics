@@ -263,6 +263,17 @@ confidence = Math.min(confidence, 95);
     else
         confidence = 60;
 }
+let confidence = 0;
+
+if (signal !== "HOLD") {
+    confidence = Math.min(
+        Math.round((Math.abs(score) / 220) * 100),
+        95
+    );
+
+    if (confidence < 55) confidence = 55;
+}
+
 return {
     signal,
     confidence,
