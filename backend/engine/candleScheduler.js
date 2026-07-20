@@ -76,29 +76,25 @@ async function runScheduler(
 
     await db.query(
 
-        `INSERT INTO candle_predictions
-        (prediction_time,
+         INSERT INTO candle_predictions
+         (prediction_time,
          expiry_time,
          open_price,
+         close_price,
          signal,
          confidence,
          result)
 
          VALUES ($1,$2,$3,$4,$5,'PENDING')`,
 
-        [
-
-            predictionTime,
-
-            expiryTime,
-
-            current5m.open,
-
-            prediction.signal,
-
-            prediction.confidence
-
-        ]
+         [
+    predictionTime,
+    expiryTime,
+    current5m.open,
+    null,
+    prediction.signal,
+    prediction.confidence
+]
 
     );
 
