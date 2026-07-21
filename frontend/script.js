@@ -118,28 +118,32 @@ async function loadActivePredictions() {
                 .toLocaleTimeString();
 
             html += `
-            <div style="margin-bottom:15px;padding-bottom:10px;border-bottom:1px solid #444;">
+<div class="prediction-card ${p.result}">
 
-                <p><b>Signal:</b> ${p.signal}</p>
+<h3>${p.signal}</h3>
 
-                <p><b>Confidence:</b> ${p.confidence}%</p>
+<p><b>Confidence:</b> ${p.confidence}%</p>
 
-                <p><b>Prediction:</b> ${predictionTime}</p>
+<div class="progress">
+<div style="width:${p.confidence}%"></div>
+</div>
 
-                <p><b>Expiry:</b> ${expiryTime}</p>
+<p><b>Prediction:</b> ${predictionTime}</p>
 
-                <p><b>Status:</b> ${p.result}</p>
+<p><b>Expiry:</b> ${expiryTime}</p>
 
-                ${
-                    p.result === "PENDING"
-                    ? `<p><b>Remaining:</b>
-                       <span id="timer-${p.id}"></span>
-                       </p>`
-                    : ""
-                }
+<p class="status">${p.result}</p>
 
-            </div>
-            `;
+${
+    p.result === "PENDING"
+    ? `<p>Remaining:
+        <span id="timer-${p.id}"></span>
+       </p>`
+    : ""
+}
+
+</div>
+`;
 
         });
 
