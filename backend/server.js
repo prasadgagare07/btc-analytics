@@ -117,6 +117,41 @@ app.get("/api/last-trades", async (req, res) => {
 
 });
 
+app.get("/api/streak", async (req, res) => {
+
+    const result = await db.query(`
+        SELECT result
+        FROM candle_predictions
+        WHERE result IN ('WIN','LOSS')
+        ORDER BY prediction_time DESC
+    `);
+
+    let streak = 0;
+    let type = "-";
+
+    if (result.rows.length > 0) {
+
+        type = result.rows[0].result;
+
+        for (const row of result.rows) {
+
+            if (row.result === type) {
+                streak++;
+            } else {
+                break;
+            }
+
+        }
+
+    }
+
+    res.json({
+        streak,
+        type
+    });
+
+});
+
 app.get("/api/levels", (req, res) => {
 
     const candles = getCandles().history["1m"];
