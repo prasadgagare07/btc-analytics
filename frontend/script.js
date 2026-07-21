@@ -355,6 +355,5 @@ async function refresh() {
     await loadIndicators();
     await loadPrediction();
 }
-refresh();
-
-setInterval(refresh, 2000);
+loadStatus();
+loadMarket();
