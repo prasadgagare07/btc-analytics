@@ -1,4 +1,4 @@
-//alert("SCRIPT LOADED");
+alert("SCRIPT LOADED");
 
 let chart;
 let candleSeries;
