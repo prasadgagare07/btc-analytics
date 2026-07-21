@@ -493,11 +493,6 @@ app.get("/api/candleprediction", (req, res) => {
         console.log("Port:", PORT);
         console.log("==================================");
     });
-
-}
-
-    res.json(result.rows);
-
 } 
 
 startServer();
