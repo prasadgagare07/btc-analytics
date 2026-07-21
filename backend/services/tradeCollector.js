@@ -1,8 +1,5 @@
 const marketState = require("../data/marketState");
 
-
-const marketState = require("../data/marketState");
-
 function processTrade(trade) {
 
     const price = Number(trade.p);
