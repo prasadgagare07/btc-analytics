@@ -63,6 +63,41 @@ async function loadIndicators() {
         alert(err.message);
     }
 }
+async function loadPrediction() {
+
+    try {
+
+        const res = await fetch("/api/prediction");
+        const data = await res.json();
+
+        document.getElementById("signal").innerHTML =
+            data.signal ?? "-";
+
+        document.getElementById("confidence").innerHTML =
+            (data.confidence ?? 0) + "%";
+
+        document.getElementById("entry").innerHTML =
+            data.entry ?? "-";
+
+        document.getElementById("target").innerHTML =
+            data.target ?? "-";
+
+        document.getElementById("reasons").innerHTML =
+            data.reasons
+                ? data.reasons.join(", ")
+                : "-";
+
+        document.getElementById("tradeDuration").innerHTML =
+            data.tradeDuration ?? "-";
+
+    } catch (err) {
+
+        console.log(err);
+
+    }
+
+}
+
 async function loadActivePredictions() {
 
     try {
