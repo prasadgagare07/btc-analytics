@@ -100,8 +100,15 @@ async function loadActivePredictions() {
         const res =
     await fetch("/api/candle-history");
         const predictions = await res.json();
-        const activePredictions =
-    predictions.filter(p => p.result === "PENDING");
+        
+        const now = Date.now();
+
+const activePredictions = predictions.filter(p => {
+    return (
+        p.result === "PENDING" &&
+        Number(p.expiry_time) > now
+    );
+});
 
         let html = "";
 
