@@ -14,11 +14,17 @@ async function runScheduler(
 
     if (!current) return;
 
-    const predictionTime = current.time;
+    // Round to nearest 5-minute candle
+    const predictionTime =
+        Math.floor(
+            current.time / (5 * 60 * 1000)
+        ) * (5 * 60 * 1000);
 
+    // Prediction expires after 10 minutes
     const expiryTime =
         predictionTime + (10 * 60 * 1000);
 
+    // Prevent duplicate prediction for same 5-minute candle
     const exists = await db.query(
         `
         SELECT id
@@ -85,9 +91,10 @@ async function runScheduler(
     );
 
     console.log(
-        "New prediction created:",
+        "New 5-minute prediction:",
         new Date(predictionTime).toLocaleTimeString()
     );
+
 }
 
 module.exports = {
