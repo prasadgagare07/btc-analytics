@@ -63,61 +63,16 @@ async function loadIndicators() {
         alert(err.message);
     }
 }
-
-async function loadPrediction() {
-
-    try {
-
-        const res = await fetch("/api/prediction");
-        const data = await res.json();
-        //alert(JSON.stringify(data));
-
-        document.getElementById("signal").textContent = data.signal || "-";
-        document.getElementById("confidence").textContent = (data.confidence ?? 0) + "%";
-        document.getElementById("entry").textContent = data.entry || "-";
-        document.getElementById("target").innerHTML = data.target;
-        //document.getElementById("sl").textContent = data.sl || "-";
-        //document.getElementById("tp").textContent = data.tp || "-";
-        document.getElementById("target").innerHTML = data.target;
-        document.getElementById("reasons").textContent =
-        data.reasons ? data.reasons.join(", ") : "-";
-        document.getElementById("tradeDuration").textContent =
-        data.tradeDuration || "-";
-        
-    } catch (err) {
-
-        console.log(err);
-        alert(err.message);
-
-    }
-
-}
-
 async function loadActivePredictions() {
 
     try {
 
-        const res =
-    await fetch("/api/candle-history");
+        const res = await fetch("/api/candle-history");
         const predictions = await res.json();
-        
-        const now = Date.now();
-
-        const pending =
-    predictions.filter(p => p.result === "PENDING");
-
-const finished =
-    predictions.filter(p => p.result !== "PENDING");
-
-const displayPredictions = [
-    ...pending.slice(0, 2),
-    ...finished.slice(0, 1)
-];
-    .sort((a, b) => Number(b.prediction_time) - Number(a.prediction_time));
 
         let html = "";
 
-        activePredictions.slice(0, 2).forEach(p => {
+        predictions.forEach(p => {
 
             const predictionTime =
                 new Date(Number(p.prediction_time))
@@ -128,7 +83,6 @@ const displayPredictions = [
                 .toLocaleTimeString();
 
             html += `
-
             <div style="margin-bottom:15px;padding-bottom:10px;border-bottom:1px solid #444;">
 
                 <p><b>Signal:</b> ${p.signal}</p>
@@ -141,33 +95,44 @@ const displayPredictions = [
 
                 <p><b>Status:</b> ${p.result}</p>
 
-                <p><b>Remaining:</b>
-                <span id="timer-${p.id}"></span>
-                </p>
+                ${
+                    p.result === "PENDING"
+                    ? `<p><b>Remaining:</b>
+                       <span id="timer-${p.id}"></span>
+                       </p>`
+                    : ""
+                }
 
             </div>
-
             `;
 
         });
 
-      if (displayPredictions.length === 0) {
-    html = "No active predictions";
+        if (predictions.length === 0) {
+            html = "No predictions";
+        }
+
+        document.getElementById("activePredictions").innerHTML = html;
+
+        predictions
+            .filter(p => p.result === "PENDING")
+            .forEach(p => {
+
+                startPredictionTimer(
+                    p.id,
+                    Number(p.expiry_time)
+                );
+
+            });
+
+    } catch (err) {
+
+        console.log(err);
+
+    }
+
 }
 
-document.getElementById("activePredictions").innerHTML = html;
-
-
-   displayPredictions.forEach(p => { startPredictionTimer(
-        p.id,
-        Number(p.expiry_time)
-    );
-});
-
-} catch (err) {
-    console.log(err);
-}
-}
 function startPredictionTimer(id, expiryTime) {
 
     function update() {
@@ -194,73 +159,7 @@ function startPredictionTimer(id, expiryTime) {
             `${min}:${sec.toString().padStart(2, "0")}`;
 
     }
-
-    update();
-
-    setInterval(update, 1000);
-
-}
-
-async function loadAccuracy() {
-
-    try {
-
-        const res = await fetch("/api/accuracy");
-        const data = await res.json();
-
-        document.getElementById("accuracy").innerHTML =
-            data.accuracy + "%";
-
-    } catch (err) {
-
-        console.log(err);
-        alert(err.message);
-
-    }
-
-    }
-
-        async function loadOpenInterest() {
-
-    try {
-
-        const res = await fetch("/api/market");
-        const data = await res.json();
-
-        document.getElementById("oi").innerHTML =
-            data.openInterest ?? 0;
-
-    } catch (err) {
-
-        console.log(err);
-        //alert(err.message);
-
-    }
-
-        }
-
-    async function loadFunding() {
-
-    try {
-
-        const res = await fetch("/api/market");
-        const data = await res.json();
-
-        document.getElementById("funding").innerHTML =
-            data.fundingRate ?? 0;
-
-    } catch (err) {
-
-        console.log(err);
-        //alert(err.message);
-
-    }
-
-    }
-
-        async function loadLiquidations() {
-
-    try {
+⅙
 
         const res = await fetch("/api/market");
         const data = await res.json();
