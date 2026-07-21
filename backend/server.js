@@ -91,6 +91,14 @@ app.get("/api/clear-predictions", async (req, res) => {
 
 });
 
+app.get("/api/reset-predictions", async (req, res) => {
+
+    await db.query("TRUNCATE TABLE candle_predictions RESTART IDENTITY");
+
+    res.send("Predictions Reset");
+
+});
+
 app.get("/api/probability", (req, res) => {
 
     const prediction = predict(
