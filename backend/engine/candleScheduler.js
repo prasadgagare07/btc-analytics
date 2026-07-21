@@ -74,6 +74,20 @@ async function runScheduler(
 
     );
 
+    const exists = await db.query(
+`
+SELECT id
+FROM candle_predictions
+WHERE prediction_time = $1
+LIMIT 1
+`,
+[predictionTime]
+);
+
+if (exists.rows.length > 0) {
+    return;
+}
+
     await db.query(
 `
 INSERT INTO candle_predictions
