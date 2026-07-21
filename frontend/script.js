@@ -97,6 +97,20 @@ async function loadPrediction() {
     }
 
 }
+
+async function loadStreak() {
+
+    const res = await fetch("/api/streak");
+
+    const data = await res.json();
+
+    document.getElementById("streak").innerHTML =
+        data.streak;
+
+    document.getElementById("streakType").innerHTML =
+        data.type;
+
+}
 async function loadTradeStats(){
 
 const res=
@@ -390,6 +404,7 @@ async function refresh() {
     await loadPrediction();
     await loadActivePredictions();
     await loadLiveBias();
+    await loadStreak();
     await loadTradeStats();
     await loadLastTrades();
     await loadAccuracy();
