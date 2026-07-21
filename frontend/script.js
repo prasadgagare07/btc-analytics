@@ -172,6 +172,55 @@ ${
 
 }
 
+async function loadLastTrades() {
+
+    const res = await fetch("/api/last-trades");
+
+    const trades = await res.json();
+
+    let html = "";
+
+    trades.forEach(t => {
+
+        html += `
+<div class="prediction-card ${t.result}">
+
+<h3>${t.signal}</h3>
+
+<p>Confidence : ${t.confidence}%</p>
+
+<p>Entry : ${t.open_price}</p>
+
+<p>Exit : ${t.close_price}</p>
+
+<p class="status">${t.result}</p>
+
+</div>
+`;
+
+    });
+
+    document.getElementById("lastTrades").innerHTML = html;
+
+}
+
+async function loadLiveBias(){
+
+    const res = await fetch("/api/prediction");
+
+    const data = await res.json();
+
+    document.getElementById("liveBias").innerHTML =
+        data.signal;
+
+    document.getElementById("liveStrength").innerHTML =
+        data.confidence + "%";
+
+    document.getElementById("liveStrengthBar").style.width =
+        data.confidence + "%";
+
+}
+
 function startPredictionTimer(id, expiryTime) {
 
     function update() {
@@ -325,6 +374,8 @@ async function refresh() {
     await loadIndicators();
     await loadPrediction();
     await loadActivePredictions();
+    await loadLiveBias();
+    await loadLastTrades();
     await loadAccuracy();
     await loadOpenInterest();
     await loadFunding();
