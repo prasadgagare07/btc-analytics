@@ -102,6 +102,21 @@ app.get("/api/orderbook", (req, res) => {
     );
 
 });
+
+app.get("/api/last-trades", async (req, res) => {
+
+    const result = await db.query(`
+        SELECT *
+        FROM candle_predictions
+        WHERE result <> 'PENDING'
+        ORDER BY prediction_time DESC
+        LIMIT 10
+    `);
+
+    res.json(result.rows);
+
+});
+
 app.get("/api/levels", (req, res) => {
 
     const candles = getCandles().history["1m"];
