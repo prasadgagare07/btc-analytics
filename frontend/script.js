@@ -48,6 +48,25 @@ async function loadOrderBook() {
     }
 
 }
+async function loadProbability(){
+
+    const res = await fetch("/api/probability");
+
+    const data = await res.json();
+
+    document.getElementById("buyProb").innerHTML =
+        data.buy + "%";
+
+    document.getElementById("sellProb").innerHTML =
+        data.sell + "%";
+
+    document.getElementById("buyProbBar").style.width =
+        data.buy + "%";
+
+    document.getElementById("sellProbBar").style.width =
+        data.sell + "%";
+
+}
 
 async function loadIndicators() {
     try {
@@ -405,6 +424,7 @@ async function refresh() {
     await loadActivePredictions();
     await loadLiveBias();
     await loadStreak();
+    await loadProbability();
     await loadTradeStats();
     await loadLastTrades();
     await loadAccuracy();
