@@ -350,22 +350,8 @@ function startCountdown(expiryTime) {
 }
 
 async function refresh() {
-    try {
-        await loadStatus();
-        await loadMarket();
-        await loadOrderBook();
-        await loadIndicators();
-        await loadPrediction();
-        await loadActivePredictions();
-        await loadAccuracy();
-        await loadOpenInterest();
-        await loadFunding();
-        await loadLiquidations();
-        await loadChart();
-    } catch (err) {
-        console.error("Refresh error:", err);
-        alert(err.message);
-    }
+    await loadStatus();
+    await loadMarket();
 }
 
 refresh();
