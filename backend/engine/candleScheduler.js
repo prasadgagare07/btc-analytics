@@ -75,19 +75,29 @@ async function runScheduler(
     );
 
     await db.query(
-
-         INSERT INTO candle_predictions
-         (prediction_time,
-         expiry_time,
-         open_price,
-         close_price,
-         signal,
-         confidence,
-         result)
-
-         VALUES ($1,$2,$3,$4,$5,'PENDING')`,
-
-         [
+`
+INSERT INTO candle_predictions
+(
+    prediction_time,
+    expiry_time,
+    open_price,
+    close_price,
+    signal,
+    confidence,
+    result
+)
+VALUES
+(
+    $1,
+    $2,
+    $3,
+    $4,
+    $5,
+    $6,
+    'PENDING'
+)
+`,
+[
     predictionTime,
     expiryTime,
     current5m.open,
@@ -95,8 +105,7 @@ async function runScheduler(
     prediction.signal,
     prediction.confidence
 ]
-
-    );
+);
 
     console.log(
         "New 5-minute prediction created."
