@@ -144,22 +144,57 @@ function startPredictionTimer(id, expiryTime) {
         if (!element) return;
 
         if (remaining <= 0) {
-
             element.innerHTML = "Expired";
-
             return;
-
         }
 
         const min = Math.floor(remaining / 60000);
-
         const sec = Math.floor((remaining % 60000) / 1000);
 
         element.innerHTML =
             `${min}:${sec.toString().padStart(2, "0")}`;
-
     }
-⅙
+
+    update();
+
+    setInterval(update, 1000);
+}
+
+async function loadAccuracy() {
+
+    const res = await fetch("/api/accuracy");
+    const data = await res.json();
+
+    document.getElementById("accuracy").innerHTML =
+        data.accuracy + "%";
+}
+
+async function loadOpenInterest() {
+
+    const res = await fetch("/api/market");
+    const data = await res.json();
+
+    document.getElementById("oi").innerHTML =
+        data.openInterest ?? 0;
+}
+
+async function loadFunding() {
+
+    const res = await fetch("/api/market");
+    const data = await res.json();
+
+    document.getElementById("funding").innerHTML =
+        data.fundingRate ?? 0;
+}
+
+async function loadLiquidations() {
+
+    const res = await fetch("/api/market");
+    const data = await res.json();
+
+    document.getElementById("liquidations").innerHTML =
+        data.liquidationSide ?? "None";
+}
 
         const res = await fetch("/api/market");
         const data = await res.json();
