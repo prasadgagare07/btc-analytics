@@ -141,34 +141,23 @@ async function loadActivePredictions() {
 
         });
 
-        if (activePredictions.length === 0)
-            html = "No active predictions";
+        if (activePredictions.length === 0) {
+    html = "No active predictions";
+}
 
-        }
+document.getElementById("activePredictions").innerHTML = html;
 
-        document.getElementById(
-            "activePredictions"
-        ).innerHTML = html;
-
-        activePredictions.forEach(p => {
-
+activePredictions.forEach(p => {
     startPredictionTimer(
         p.id,
         Number(p.expiry_time)
     );
-
 });
 
-    }
-
-    catch (err) {
-
-        console.log(err);
-
-    }
-
+} catch (err) {
+    console.log(err);
 }
-
+    
 function startPredictionTimer(id, expiryTime) {
 
     function update() {
