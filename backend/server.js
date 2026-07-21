@@ -81,6 +81,16 @@ app.get("/api/status", (req, res) => {
     });
 });
 
+app.get("/api/clear-predictions", async (req, res) => {
+
+    await db.query(`
+        DELETE FROM candle_predictions
+    `);
+
+    res.send("Predictions cleared");
+
+});
+
 // Live Market
 app.get("/api/market", (req, res) => {
     res.json(marketState);
