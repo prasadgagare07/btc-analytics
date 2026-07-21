@@ -196,20 +196,6 @@ async function loadLiquidations() {
         data.liquidationSide ?? "None";
 }
 
-        const res = await fetch("/api/market");
-        const data = await res.json();
-
-        document.getElementById("liquidations").innerHTML =
-            data.liquidationSide ?? "None";
-
-    } catch (err) {
-
-        console.log(err);
-        //alert(err.message);
-
-    }
-
-        }
        async function loadChart() {
 
     try {
