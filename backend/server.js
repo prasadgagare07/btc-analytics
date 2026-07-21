@@ -210,6 +210,35 @@ app.get("/api/timeframes", (req, res) => {
 
 });
 
+app.get("/api/trade-stats", async (req,res)=>{
+
+const wins=await db.query(
+"SELECT COUNT(*) FROM candle_predictions WHERE result='WIN'"
+);
+
+const losses=await db.query(
+"SELECT COUNT(*) FROM candle_predictions WHERE result='LOSS'"
+);
+
+const win=Number(wins.rows[0].count);
+
+const loss=Number(losses.rows[0].count);
+
+const total=win+loss;
+
+const rate=
+total===0
+?0
+:Number(((win/total)*100).toFixed(1));
+
+res.json({
+wins:win,
+losses:loss,
+rate
+});
+
+});
+
 // Indicators
 app.get("/api/indicators", (req, res) => {
 
