@@ -1,21 +1,7 @@
-const {
-    aggregate
-} = require("./timeframeEngine");
-
-const {
-    calculateEMA,
-    calculateRSI
-} = require("./indicatorEngine");
-
-const {
-    detectPattern
-} = require("./patternEngine");
-
-const {
-    predict
-} = require("./predictionEngine");
-
-let lastPredictionTime = 0;
+const { aggregate } = require("./timeframeEngine");
+const { calculateEMA, calculateRSI } = require("./indicatorEngine");
+const { detectPattern } = require("./patternEngine");
+const { predict } = require("./predictionEngine");
 
 async function runScheduler(
     candles,
@@ -23,122 +9,85 @@ async function runScheduler(
     db
 ) {
 
-    const candles5m = aggregate(candles, 5);
+    const current =
+        candles[candles.length - 1];
 
-    const current5m =
-        candles5m[candles5m.length - 1];
+    if (!current) return;
 
-    if (!current5m)
-        return;
-
-    const predictionTime =
-        Math.floor(
-            current5m.time / (5 * 60 * 1000)
-        ) * (5 * 60 * 1000);
+    const predictionTime = current.time;
 
     const expiryTime =
         predictionTime + (10 * 60 * 1000);
 
-    if (predictionTime === lastPredictionTime)
-        return;
+    const exists = await db.query(
+        `
+        SELECT id
+        FROM candle_predictions
+        WHERE prediction_time = $1
+        LIMIT 1
+        `,
+        [predictionTime]
+    );
 
-    lastPredictionTime = predictionTime;
+    if (exists.rows.length > 0) {
+        return;
+    }
 
     const indicators = {
-
-        ema9:
-            calculateEMA(candles, 9),
-
-        ema21:
-            calculateEMA(candles, 21),
-
-        rsi:
-            calculateRSI(candles)
-
+        ema9: calculateEMA(candles, 9),
+        ema21: calculateEMA(candles, 21),
+        rsi: calculateRSI(candles)
     };
 
     const prediction = predict(
-
         {
             candles1m: candles,
             candles3m: aggregate(candles, 3),
-            candles5m,
+            candles5m: aggregate(candles, 5),
             candles10m: aggregate(candles, 10)
         },
-
         indicators,
-
         marketState,
-
         detectPattern(candles)
-
     );
 
-    const exists = await db.query(
-`
-SELECT id
-FROM candle_predictions
-WHERE prediction_time = $1
-LIMIT 1
-`,
-[predictionTime]
-);
-
-if (exists.rows.length > 0) {
-    return;
-}
-
-const exists = await db.query(
-`
-SELECT id
-FROM candle_predictions
-WHERE prediction_time = $1
-LIMIT 1
-`,
-[predictionTime]
-);
-
-if (exists.rows.length > 0) {
-    return;
-}
-    
     await db.query(
-`
-INSERT INTO candle_predictions
-(
-    prediction_time,
-    expiry_time,
-    open_price,
-    close_price,
-    signal,
-    confidence,
-    result
-)
-VALUES
-(
-    $1,
-    $2,
-    $3,
-    $4,
-    $5,
-    $6,
-    'PENDING'
-)
-`,
-[
-    predictionTime,
-    expiryTime,
-    current5m.open,
-    null,
-    prediction.signal,
-    prediction.confidence
-]
-);
+        `
+        INSERT INTO candle_predictions
+        (
+            prediction_time,
+            expiry_time,
+            open_price,
+            close_price,
+            signal,
+            confidence,
+            result
+        )
+        VALUES
+        (
+            $1,
+            $2,
+            $3,
+            $4,
+            $5,
+            $6,
+            'PENDING'
+        )
+        `,
+        [
+            predictionTime,
+            expiryTime,
+            current.open,
+            null,
+            prediction.signal,
+            prediction.confidence
+        ]
+    );
 
     console.log(
-        "New 5-minute prediction created."
+        "New prediction created:",
+        new Date(predictionTime).toLocaleTimeString()
     );
-
 }
 
 module.exports = {
