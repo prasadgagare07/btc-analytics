@@ -91,6 +91,44 @@ app.get("/api/clear-predictions", async (req, res) => {
 
 });
 
+app.get("/api/probability", (req, res) => {
+
+    const prediction = predict(
+        {
+            candles1m: getCandles().history["1m"],
+            candles3m: aggregate(getCandles().history["1m"], 3),
+            candles5m: aggregate(getCandles().history["1m"], 5),
+            candles10m: aggregate(getCandles().history["1m"], 10)
+        },
+        {
+            ema9: calculateEMA(getCandles().history["1m"], 9),
+            ema21: calculateEMA(getCandles().history["1m"], 21),
+            rsi: calculateRSI(getCandles().history["1m"])
+        },
+        marketState,
+        detectPattern(getCandles().history["1m"])
+    );
+
+    let buy = 50;
+    let sell = 50;
+
+    if (prediction.signal === "BUY") {
+        buy = prediction.confidence;
+        sell = 100 - buy;
+    }
+
+    if (prediction.signal === "SELL") {
+        sell = prediction.confidence;
+        buy = 100 - sell;
+    }
+
+    res.json({
+        buy,
+        sell
+    });
+
+});
+
 // Live Market
 app.get("/api/market", (req, res) => {
     res.json(marketState);
