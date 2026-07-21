@@ -383,11 +383,22 @@ setInterval(async() => {
 
     updateCandle(marketState);
     const candles = getCandles().history["1m"];
-    await runScheduler(
-    candles,
-    marketState,
-    db
-);
+
+// Only run scheduler when a new closed candle exists
+if (candles.length > 0) {
+    const lastCandle = candles[candles.length - 1];
+
+    // Only closed candles whose minute is divisible by 5
+    const minute = new Date(Number(lastCandle.time)).getUTCMinutes();
+
+    if (minute % 5 === 0) {
+        await runScheduler(
+            candles,
+            marketState,
+            db
+        );
+    }
+}
     await checkResults(
     db,
     marketState
