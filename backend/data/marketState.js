@@ -21,6 +21,12 @@ askQty: 0,
 spread: 0,
 
 orderBookImbalance: 0,
+
+    aggressiveBuyVolume: 0,
+aggressiveSellVolume: 0,
+aggressiveRatio: 50,
+largeBuyOrders: 0,
+largeSellOrders: 0
 };
 
 module.exports = marketState;
