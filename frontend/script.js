@@ -1,7 +1,3 @@
-console.log("SCRIPT LOADED");
-
-document.getElementById("status").innerHTML = "TEST";
-
 let chart;
 let candleSeries;
 
@@ -159,7 +155,7 @@ activePredictions.forEach(p => {
 } catch (err) {
     console.log(err);
 }
-    
+}
 function startPredictionTimer(id, expiryTime) {
 
     function update() {
@@ -357,6 +353,14 @@ async function refresh() {
     await loadOrderBook();
     await loadIndicators();
     await loadPrediction();
+    await loadActivePredictions();
+    await loadAccuracy();
+    await loadOpenInterest();
+    await loadFunding();
+    await loadLiquidations();
+    await loadChart();
 }
-loadStatus();
-loadMarket();
+
+refresh();
+
+setInterval(refresh, 2000);
