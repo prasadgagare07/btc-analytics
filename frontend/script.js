@@ -103,8 +103,16 @@ async function loadActivePredictions() {
         
         const now = Date.now();
 
-        const activePredictions = predictions
-    .filter(p => p.result === "PENDING")
+        const pending =
+    predictions.filter(p => p.result === "PENDING");
+
+const finished =
+    predictions.filter(p => p.result !== "PENDING");
+
+const displayPredictions = [
+    ...pending.slice(0, 2),
+    ...finished.slice(0, 1)
+];
     .sort((a, b) => Number(b.prediction_time) - Number(a.prediction_time));
 
         let html = "";
@@ -143,14 +151,14 @@ async function loadActivePredictions() {
 
         });
 
-        if (activePredictions.length === 0) {
+      if (displayPredictions.length === 0) {
     html = "No active predictions";
 }
 
 document.getElementById("activePredictions").innerHTML = html;
 
-activePredictions.forEach(p => {
-    startPredictionTimer(
+
+   displayPredictions.forEach(p => { startPredictionTimer(
         p.id,
         Number(p.expiry_time)
     );
