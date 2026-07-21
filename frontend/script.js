@@ -172,7 +172,7 @@ ${
 
 }
 
-async function loadLastTrades() {
+async function loadLastTrades(){
 
     const res = await fetch("/api/last-trades");
 
@@ -180,27 +180,21 @@ async function loadLastTrades() {
 
     let html = "";
 
-    trades.forEach(t => {
+    trades.forEach(t=>{
 
-        html += `
-<div class="prediction-card ${t.result}">
+        let cls="pending";
 
-<h3>${t.signal}</h3>
+        if(t.result==="WIN")
+            cls="win";
 
-<p>Confidence : ${t.confidence}%</p>
+        if(t.result==="LOSS")
+            cls="loss";
 
-<p>Entry : ${t.open_price}</p>
-
-<p>Exit : ${t.close_price}</p>
-
-<p class="status">${t.result}</p>
-
-</div>
-`;
+        html+=`<div class="trade-box ${cls}" title="${t.result}"></div>`;
 
     });
 
-    document.getElementById("lastTrades").innerHTML = html;
+    document.getElementById("lastTrades").innerHTML=html;
 
 }
 
