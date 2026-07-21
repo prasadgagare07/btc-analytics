@@ -100,14 +100,14 @@ async function loadActivePredictions() {
     try {
 
         const res =
-            await fetch("/api/active-predictions");
-
-        const predictions =
-            await res.json();
+    await fetch("/api/candle-history");
+        const predictions = await res.json();
+        const activePredictions =
+    predictions.filter(p => p.result === "PENDING");
 
         let html = "";
 
-        predictions.forEach(p => {
+        activePredictions.forEach(p => {
 
             const predictionTime =
                 new Date(Number(p.prediction_time))
@@ -141,8 +141,7 @@ async function loadActivePredictions() {
 
         });
 
-        if (predictions.length === 0) {
-
+        if (activePredictions.length === 0)
             html = "No active predictions";
 
         }
@@ -151,7 +150,7 @@ async function loadActivePredictions() {
             "activePredictions"
         ).innerHTML = html;
 
-        predictions.forEach(p => {
+        activePredictions.forEach(p => {
 
     startPredictionTimer(
         p.id,
