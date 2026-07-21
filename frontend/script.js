@@ -1,3 +1,6 @@
+console.log("SCRIPT LOADED");
+
+document.getElementById("status").innerHTML = "TEST";
 
 let chart;
 let candleSeries;
