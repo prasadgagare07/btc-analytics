@@ -1,3 +1,5 @@
+const marketState = require("../data/marketState");
+
 const db = require("../database/db");
 
 const candles = {
@@ -36,6 +38,16 @@ function updateCandle(market) {
     if (current1m) {
 
       candles["1m"].push(current1m);
+
+      marketState.aggressiveBuyVolume = 0;
+
+marketState.aggressiveSellVolume = 0;
+
+marketState.aggressiveRatio = 50;
+
+marketState.largeBuyOrders = 0;
+
+marketState.largeSellOrders = 0;
 
       db.query(
         `INSERT INTO candles
