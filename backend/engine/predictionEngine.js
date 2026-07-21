@@ -46,10 +46,10 @@ score += t10 * 35;
 });
 
 if (bullishTrends >= 3)
-    score += 25;
+    score += 35;
 
 if (bearishTrends >= 3)
-    score -= 25;
+    score -= 35;
 
 // Strong trend bonus
 if (bullishTrends === 4)
@@ -218,12 +218,34 @@ if (bearish >= 3)
     
     let signal = "HOLD";
 
-    if (score >= 60)
-    signal = "BUY";
-else if (score <= -60)
-    signal = "SELL";
-else
+    // Don't trade when order flow is neutral
+if (
+    market.aggressiveRatio >= 45 &&
+    market.aggressiveRatio <= 55
+) {
+
     signal = "HOLD";
+
+}
+
+// Only take strong signals
+else if (score >= 85) {
+
+    signal = "BUY";
+
+}
+
+else if (score <= -85) {
+
+    signal = "SELL";
+
+}
+
+else {
+
+    signal = "HOLD";
+
+}
 
     const price = market.lastPrice || 0;
 
