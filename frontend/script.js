@@ -103,16 +103,13 @@ async function loadActivePredictions() {
         
         const now = Date.now();
 
-const activePredictions = predictions.filter(p => {
-    return (
-        p.result === "PENDING" &&
-        Number(p.expiry_time) > now
-    );
-});
+        const activePredictions = predictions
+    .filter(p => p.result === "PENDING")
+    .sort((a, b) => Number(b.prediction_time) - Number(a.prediction_time));
 
         let html = "";
 
-        activePredictions.forEach(p => {
+        activePredictions.slice(0, 2).forEach(p => {
 
             const predictionTime =
                 new Date(Number(p.prediction_time))
