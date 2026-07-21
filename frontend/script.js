@@ -349,21 +349,12 @@ function startCountdown(expiryTime) {
 }
 
 async function refresh() {
-
     await loadStatus();
     await loadMarket();
     await loadOrderBook();
     await loadIndicators();
     await loadPrediction();
-    await loadActivePredictions();
-    await loadAccuracy();
-    await loadOpenInterest();
-    await loadFunding();
-    await loadLiquidations();
-    await loadChart();
-
 }
-
 refresh();
 
 setInterval(refresh, 2000);
