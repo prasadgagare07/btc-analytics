@@ -474,13 +474,14 @@ app.get("/api/candleprediction", (req, res) => {
     res.json(getPrediction());
 
 });
+
     app.get("/api/candle-history", async (req, res) => {
 
     const result = await db.query(`
         SELECT *
         FROM candle_predictions
         ORDER BY prediction_time DESC
-        LIMIT 100
+        LIMIT 3
     `);
 
     res.json(result.rows);
