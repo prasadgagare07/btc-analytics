@@ -97,6 +97,27 @@ async function loadPrediction() {
     }
 
 }
+async function loadTradeStats(){
+
+const res=
+await fetch("/api/trade-stats");
+
+const data=
+await res.json();
+
+document.getElementById("winRate").innerHTML=
+data.rate+"%";
+
+document.getElementById("wins").innerHTML=
+data.wins;
+
+document.getElementById("losses").innerHTML=
+data.losses;
+
+document.getElementById("winRateBar").style.width=
+data.rate+"%";
+
+}
 
 async function loadActivePredictions() {
 
@@ -369,6 +390,7 @@ async function refresh() {
     await loadPrediction();
     await loadActivePredictions();
     await loadLiveBias();
+    await loadTradeStats();
     await loadLastTrades();
     await loadAccuracy();
     await loadOpenInterest();
