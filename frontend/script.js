@@ -127,19 +127,19 @@ async function loadPrediction() {
 
 const signal = document.getElementById("signal");
 
-signal.style.color = "#ffffff";
+signal.className = "";
 
 if (data.signal === "BUY")
-    signal.style.color = "#00e676";
+    signal.classList.add("buy");
 
-if (data.signal === "SELL")
-    signal.style.color = "#ff5252";
+else if (data.signal === "SELL")
+    signal.classList.add("sell");
 
-if (data.signal === "HOLD")
-    signal.style.color = "#ffd600";
+else
+    signal.classList.add("hold");
 
-        document.getElementById("confidence").innerHTML =
-            (data.confidence ?? 0) + "%";
+       document.getElementById("confidenceBar").style.width =
+    (data.confidence ?? 0) + "%"; 
 
         const confidenceBar = document.getElementById("confidenceBar");
 
