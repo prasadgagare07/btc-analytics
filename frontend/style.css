@@ -57,10 +57,25 @@ canvas{
     height:400px;
 }
 
-.prediction-list{
-    display:flex;
-    flex-direction:column;
-    gap:12px;
+#slot1,
+#slot2,
+#slot3{
+
+margin-bottom:10px;
+
+}
+.prediction-card{
+
+padding:12px;
+
+margin:8px 0;
+
+border-radius:12px;
+
+background:#202020;
+
+text-align:center;
+
 }
 
 .trade-strip{
