@@ -27,7 +27,7 @@ async function loadMarket() {
     }
 }
 
-async function loadStreak() {
+async function loadstreaks() {
 
     const res = await fetch("/api/streaks");
     const data = await res.json();
@@ -461,7 +461,7 @@ async function refresh() {
     await loadPrediction();
     await loadActivePredictions();
     await loadLiveBias();
-    await loadStreak();
+    await loadstreaks();
     await loadProbability();
     await loadTradeStats();
     await loadLastTrades();
