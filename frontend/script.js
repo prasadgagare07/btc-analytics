@@ -508,7 +508,37 @@ function startCountdown(expiryTime) {
 
 async function refresh() {
 
-    await loadActivePredictions();
+    try { await loadStatus(); } catch(e){ console.log(e); }
+
+    try { await loadMarket(); } catch(e){ console.log(e); }
+
+    try { await loadOrderBook(); } catch(e){ console.log(e); }
+
+    try { await loadIndicators(); } catch(e){ console.log(e); }
+
+    try { await loadPrediction(); } catch(e){ console.log(e); }
+
+    try { await loadActivePredictions(); } catch(e){ console.log(e); }
+
+    try { await loadLiveBias(); } catch(e){ console.log(e); }
+
+    try { await loadstreaks(); } catch(e){ console.log(e); }
+
+    try { await loadProbability(); } catch(e){ console.log(e); }
+
+    try { await loadTradeStats(); } catch(e){ console.log(e); }
+
+    try { await loadLastTrades(); } catch(e){ console.log(e); }
+
+    try { await loadAccuracy(); } catch(e){ console.log(e); }
+
+    try { await loadOpenInterest(); } catch(e){ console.log(e); }
+
+    try { await loadFunding(); } catch(e){ console.log(e); }
+
+    try { await loadLiquidations(); } catch(e){ console.log(e); }
+
+    try { await loadChart(); } catch(e){ console.log(e); }
 
 }
 
