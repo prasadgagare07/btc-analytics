@@ -187,12 +187,6 @@ await res.json();
 document.getElementById("winRate").innerHTML=
 data.rate+"%";
 
-document.getElementById("wins").innerHTML=
-data.wins;
-
-document.getElementById("losses").innerHTML=
-data.losses;
-
 document.getElementById("tradeSummary").innerHTML =
 `🟢 ${data.wins} &nbsp;&nbsp; 🔴 ${data.losses} &nbsp;&nbsp; 🟡 ${data.noTrade}`;
 
