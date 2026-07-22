@@ -141,6 +141,85 @@ app.get("/api/orderbook", (req, res) => {
 
 });
 
+app.get("/api/streaks", async (req, res) => {
+
+    const result = await db.query(`
+        SELECT result
+        FROM candle_predictions
+        ORDER BY prediction_time ASC
+    `);
+
+    let currentWin = 0;
+    let currentLoss = 0;
+    let currentNoTrade = 0;
+
+    let maxWin = 0;
+    let maxLoss = 0;
+    let maxNoTrade = 0;
+
+    for (const row of result.rows) {
+
+        if (row.result === "WIN") {
+
+            currentWin++;
+
+            currentNoTrade = 0;
+
+            if (currentWin > maxWin)
+                maxWin = currentWin;
+
+        }
+
+        else if (row.result === "LOSS") {
+
+            currentLoss++;
+
+            currentNoTrade = 0;
+
+            if (currentLoss > maxLoss)
+                maxLoss = currentLoss;
+
+        }
+
+        else if (row.result === "NO TRADE") {
+
+            currentNoTrade++;
+
+            if (currentNoTrade > maxNoTrade)
+                maxNoTrade = currentNoTrade;
+
+        }
+
+        // WIN breaks LOSS
+        if (row.result === "WIN") {
+            currentLoss = 0;
+        }
+
+        // LOSS breaks WIN
+        if (row.result === "LOSS") {
+            currentWin = 0;
+        }
+
+    }
+
+    res.json({
+
+        maxWin,
+
+        maxLoss,
+
+        maxNoTrade,
+
+        currentWin,
+
+        currentLoss,
+
+        currentNoTrade
+
+    });
+
+});
+
 app.get("/api/last-trades", async (req, res) => {
 
     const result = await db.query(`
