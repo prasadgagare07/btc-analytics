@@ -229,12 +229,12 @@ app.get("/api/accuracy", async (req, res) => {
     try {
 
         const total = await db.query(
-            "SELECT COUNT(*) FROM predictions WHERE correct IS NOT NULL"
-        );
+    "SELECT COUNT(*) FROM predictions WHERE correct IS NOT NULL AND signal != 'HOLD'"
+);
 
         const correct = await db.query(
-            "SELECT COUNT(*) FROM predictions WHERE correct = true"
-        );
+    "SELECT COUNT(*) FROM predictions WHERE correct = true AND signal != 'HOLD'"
+);
 
         const totalCount = Number(total.rows[0].count);
         const correctCount = Number(correct.rows[0].count);
@@ -536,21 +536,31 @@ for (const row of pending.rows) {
 
     const currentPrice = marketState.lastPrice;
 
-    let result = "LOSS";
+    let result = "NO TRADE";
 
-    if (
-        row.signal === "BUY" &&
+if (row.signal === "BUY") {
+
+    result =
         currentPrice > row.open_price
-    ) {
-        result = "WIN";
-    }
+        ? "WIN"
+        : "LOSS";
 
-    if (
-        row.signal === "SELL" &&
+}
+
+if (row.signal === "SELL") {
+
+    result =
         currentPrice < row.open_price
-    ) {
-        result = "WIN";
-    }
+        ? "WIN"
+        : "LOSS";
+
+}
+
+if (row.signal === "HOLD") {
+
+    result = "NO TRADE";
+
+}
 
     await db.query(
         `
