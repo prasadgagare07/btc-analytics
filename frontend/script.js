@@ -193,6 +193,9 @@ data.wins;
 document.getElementById("losses").innerHTML=
 data.losses;
 
+document.getElementById("tradeSummary").innerHTML =
+`🟢 ${data.wins} &nbsp;&nbsp; 🔴 ${data.losses} &nbsp;&nbsp; 🟡 ${data.noTrade}`;
+
 document.getElementById("winRateBar").style.width=
 data.rate+"%";
 
