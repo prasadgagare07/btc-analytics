@@ -27,6 +27,23 @@ async function loadMarket() {
     }
 }
 
+async function loadStreaks() {
+
+    const res = await fetch("/api/streaks");
+
+    const data = await res.json();
+
+    document.getElementById("winStreak").innerHTML =
+        data.currentWin;
+
+    document.getElementById("lossStreak").innerHTML =
+        data.currentLoss;
+
+    document.getElementById("noTradeStreak").innerHTML =
+        data.currentNoTrade;
+
+}
+
 async function loadOrderBook() {
 
     try {
@@ -123,13 +140,26 @@ async function loadStreak() {
 
     const data = await res.json();
 
-    document.getElementById("streak").innerHTML =
-        data.streak;
+    document.getElementById("winStreak").innerHTML =
+        data.currentWin;
 
-    document.getElementById("streakType").innerHTML =
-        data.type;
+    document.getElementById("lossStreak").innerHTML =
+        data.currentLoss;
+
+    document.getElementById("noTradeStreak").innerHTML =
+        data.currentNoTrade;
+
+    document.getElementById("maxWinStreak").innerHTML =
+        data.maxWin;
+
+    document.getElementById("maxLossStreak").innerHTML =
+        data.maxLoss;
+
+    document.getElementById("maxNoTradeStreak").innerHTML =
+        data.maxNoTrade;
 
 }
+
 async function loadTradeStats(){
 
 const res=
