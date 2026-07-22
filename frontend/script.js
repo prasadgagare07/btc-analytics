@@ -117,62 +117,58 @@ async function loadIndicators() {
 }
 
 
-async function loadPrediction() {
+async function loadActivePredictions() {
 
     try {
 
-        const res = await fetch("/api/prediction");
-        const data = await res.json();
+        const active =
+            await (await fetch("/api/active-predictions")).json();
 
-        document.getElementById("signal").innerHTML =
-            data.signal ?? "-";
+        const history =
+            await (await fetch("/api/candle-history")).json();
 
-        const signal = document.getElementById("signal");
+        const slot1 = active[0] || null;
 
-        signal.className = "";
+        const slot2 = active[1] || null;
 
-        if (data.signal === "BUY")
-            signal.classList.add("buy");
+        const lastResult =
+            history.find(p => p.result !== "PENDING") || null;
 
-        else if (data.signal === "SELL")
-            signal.classList.add("sell");
+        function card(p,title){
 
-        else
-            signal.classList.add("hold");
+            if(!p){
+                return `<h3>${title}</h3><p>No Prediction</p>`;
+            }
 
-        document.getElementById("confidence").innerHTML =
-            (data.confidence ?? 0) + "%";
+            return `
+            <h3 class="predictionTitle">${title}</h3>
 
-        const confidenceBar =
-            document.getElementById("confidenceBar");
+            <h2>${p.signal}</h2>
 
-        confidenceBar.style.width =
-            (data.confidence ?? 0) + "%";
+            <p>${p.confidence}%</p>
 
-        if (data.signal === "BUY")
-            confidenceBar.style.background = "#00e676";
+            <div class="progress">
+                <div style="width:${p.confidence}%"></div>
+            </div>
 
-        else if (data.signal === "SELL")
-            confidenceBar.style.background = "#ff5252";
+            <p>${new Date(Number(p.prediction_time)).toLocaleTimeString()}</p>
 
-        else
-            confidenceBar.style.background = "#ffd600";
+            <p>${new Date(Number(p.expiry_time)).toLocaleTimeString()}</p>
 
-        document.getElementById("entry").innerHTML =
-            data.entry ?? "-";
+            <p class="status">${p.result}</p>
+            `;
+        }
 
-        document.getElementById("target").innerHTML =
-            data.target ?? "-";
+        document.getElementById("slot1").innerHTML =
+            card(slot1,"🔵 NEW SIGNAL");
 
-        document.getElementById("reasons").innerHTML =
-            data.reasons
-                ? data.reasons.join(", ")
-                : "-";
+        document.getElementById("slot2").innerHTML =
+            card(slot2,"🟣 RUNNING");
 
-        document.getElementById("tradeDuration").innerHTML =
-            data.tradeDuration ?? "-";
+        document.getElementById("slot3").innerHTML =
+            card(lastResult,"🏁 PREVIOUS");
 
-    } catch (err) {
+    } catch(err){
 
         console.log(err);
 
@@ -234,6 +230,8 @@ async function loadActivePredictions() {
 
         const res2 = await fetch("/api/candle-history");
         const history = await res2.json();
+        console.log(active);
+        console.log(history);
 
         const slot1 = active[active.length - 1];
         const slot2 = active.length > 1 ? active[active.length - 2] : null;
