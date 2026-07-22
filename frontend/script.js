@@ -206,7 +206,7 @@ async function loadActivePredictions() {
 
     try {
 
-        const res = await fetch("/api/candle-history");
+        const res = await fetch("/api/active-predictions");
         const predictions = await res.json();
 
         let html = "";
