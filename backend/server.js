@@ -83,9 +83,8 @@ app.get("/api/status", (req, res) => {
 
 app.get("/api/clear-predictions", async (req, res) => {
 
-    await db.query(`
-        DELETE FROM candle_predictions
-    `);
+    await db.query("DELETE FROM candle_predictions");
+await db.query("DELETE FROM predictions");
 
     res.send("Predictions cleared");
 
@@ -464,9 +463,6 @@ res.json(prediction);
 });
 app.get("/api/prediction-history", (req, res) => {
     res.json(getHistory());
-});
-app.get("/api/accuracy", (req, res) => {
-    res.json(getStats());
 });
 // Database Count
 app.get("/api/dbcount", async (req, res) => {
