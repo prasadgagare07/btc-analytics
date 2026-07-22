@@ -121,11 +121,15 @@ async function loadActivePredictions() {
 
     try {
 
+    console.log("Function started");
+
         const active =
             await (await fetch("/api/active-predictions")).json();
+        console.log("Active:", active);
 
         const history =
             await (await fetch("/api/candle-history")).json();
+        console.log("History:", history);
 
         const slot1 = active[0] || null;
 
@@ -164,6 +168,7 @@ async function loadActivePredictions() {
             `;
         }
 
+        console.log("History:", history);
         document.getElementById("slot1").innerHTML =
             card(slot1,"🔵 NEW SIGNAL");
 
@@ -175,8 +180,8 @@ async function loadActivePredictions() {
 
     } catch(err){
 
-        console.log(err);
-
+       console.error(err);
+alert(err.message); 
     }
 
 }
