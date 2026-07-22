@@ -10,11 +10,13 @@ body{
 display:grid;
 
 grid-template-columns:
-repeat(auto-fit,minmax(170px,1fr));
+170px 170px 170px 170px 220px 220px;
 
-gap:12px;
+gap:10px;
 
-padding:12px;
+padding:10px;
+
+align-items:start;
 
 }
 
@@ -22,16 +24,41 @@ padding:12px;
 
 background:linear-gradient(145deg,#1d1d1d,#262626);
 
-border-radius:16px;
+border-radius:14px;
 
-padding:15px;
-
-box-shadow:
-0 4px 15px rgba(0,0,0,.35);
-
-transition:.25s;
+padding:12px;
 
 border:1px solid rgba(255,255,255,.05);
+
+box-shadow:0 4px 12px rgba(0,0,0,.35);
+
+}
+
+#activePredictions{
+
+min-height:560px;
+
+}
+
+#prediction{
+
+min-height:320px;
+
+}
+
+#ema9,
+#ema21,
+#rsi{
+
+min-height:250px;
+
+}
+
+#priceChart{
+
+height:320px;
+
+}
 
 }
 
@@ -338,15 +365,6 @@ transition:.4s;
 border-radius:15px;
 
 }
-.prediction-list{
-
-display:grid;
-
-grid-template-columns:repeat(3,1fr);
-
-gap:12px;
-
-}
 
 .prediction-card{
 
@@ -354,76 +372,83 @@ background:#202020;
 
 border-radius:15px;
 
-padding:12px;
+padding:10px;
+
+margin-bottom:10px;
 
 text-align:center;
 
 border:1px solid #333;
 
+min-height:140px;
+
+}
+
+.prediction-card h2{
+
+font-size:20px;
+
+margin:4px 0;
+
 }
 
 .prediction-card h3{
 
-margin:5px 0;
+font-size:15px;
 
-font-size:18px;
+margin:4px 0;
+
+}
+
+.prediction-card p{
+
+margin:3px 0;
+
+font-size:13px;
 
 }
 
 .prediction-card .status{
 
-font-size:18px;
+font-size:15px;
 
 font-weight:bold;
 
-margin-top:8px;
+margin-top:6px;
 
 }
 
-.prediction-card.WIN{
+#slot1{
 
-border:2px solid #00e676;
-
-box-shadow:0 0 12px rgba(0,255,120,.25);
+border:2px solid #2196f3;
 
 }
 
-.prediction-card.LOSS{
+#slot2{
 
-border:2px solid #ff5252;
-
-box-shadow:0 0 12px rgba(255,0,0,.25);
+border:2px solid #9c27b0;
 
 }
 
-.prediction-card.PENDING{
+#slot3{
 
-border:2px solid #29b6f6;
-
-box-shadow:0 0 12px rgba(41,182,246,.25);
+border:2px solid #43a047;
 
 }
 
-.prediction-card.NO\ TRADE{
-
-border:2px solid #ffd600;
-
-box-shadow:0 0 12px rgba(255,214,0,.25);
-
-}
 .predictionTitle{
 
-background:#2d2d2d;
-
-padding:8px;
+padding:6px;
 
 border-radius:10px;
 
-margin-bottom:10px;
-
-font-size:16px;
+font-size:14px;
 
 font-weight:bold;
+
+margin-bottom:8px;
+
+color:#fff;
 
 }
 
@@ -435,12 +460,28 @@ background:#1565c0;
 
 #slot2 .predictionTitle{
 
-background:#6a1b9a;
+background:#8e24aa;
 
 }
 
 #slot3 .predictionTitle{
 
 background:#2e7d32;
+
+}
+
+#activePredictions{
+
+display:flex;
+
+flex-direction:column;
+
+gap:10px;
+
+}
+
+#activePredictions .prediction-card{
+
+width:100%;
 
 }
