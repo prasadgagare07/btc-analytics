@@ -267,29 +267,48 @@ async function loadActivePredictions() {
 
 }
 
-async function loadLastTrades(){
+async function loadLastTrades() {
 
     const res = await fetch("/api/last-trades");
-
     const trades = await res.json();
 
     let html = "";
 
-    trades.forEach(t=>{
+    trades.forEach(t => {
 
-        let cls="pending";
+        let cls = "pending";
+        let icon = "⏳";
 
-        if(t.result==="WIN")
-            cls="win";
+        if (t.result === "WIN") {
+            cls = "win";
+            icon = "🟢";
+        }
 
-        if(t.result==="LOSS")
-            cls="loss";
+        if (t.result === "LOSS") {
+            cls = "loss";
+            icon = "🔴";
+        }
 
-        html+=`<div class="trade-box ${cls}" title="${t.result}"></div>`;
+        if (t.result === "NO TRADE") {
+            cls = "hold";
+            icon = "🟡";
+        }
+
+        html += `
+        <div class="trade-box ${cls}"
+        title="
+${t.signal}
+${t.confidence}%
+${t.result}
+${new Date(Number(t.prediction_time)).toLocaleTimeString()}
+        ">
+            ${icon}
+        </div>
+        `;
 
     });
 
-    document.getElementById("lastTrades").innerHTML=html;
+    document.getElementById("lastTrades").innerHTML = html;
 
 }
 
