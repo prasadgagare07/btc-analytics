@@ -206,67 +206,58 @@ async function loadActivePredictions() {
 
     try {
 
-        const res = await fetch("/api/active-predictions");
-        const predictions = await res.json();
+        const res1 = await fetch("/api/active-predictions");
+        const active = await res1.json();
 
-        let html = "";
+        const res2 = await fetch("/api/candle-history");
+        const history = await res2.json();
 
-        predictions.forEach(p => {
+        const slot1 = active[active.length - 1];
+        const slot2 = active.length > 1 ? active[active.length - 2] : null;
+
+        const lastResult =
+            history.find(p => p.result !== "PENDING");
+
+        function card(p, title) {
+
+            if (!p) {
+                return `
+                <h3>${title}</h3>
+                <p>No Trade</p>
+                `;
+            }
 
             const predictionTime =
-                new Date(Number(p.prediction_time))
-                .toLocaleTimeString();
+                new Date(Number(p.prediction_time)).toLocaleTimeString();
 
             const expiryTime =
-                new Date(Number(p.expiry_time))
-                .toLocaleTimeString();
+                new Date(Number(p.expiry_time)).toLocaleTimeString();
 
-            html += `
-<div class="prediction-card ${p.result}">
+            return `
+                <h3>${title}</h3>
 
-<h3>${p.signal}</h3>
+                <p><b>${p.signal}</b></p>
 
-<p><b>Confidence:</b> ${p.confidence}%</p>
+                <p>${p.confidence}%</p>
 
-<div class="progress">
-<div style="width:${p.confidence}%"></div>
-</div>
+                <div class="progress">
+                    <div style="width:${p.confidence}%"></div>
+                </div>
 
-<p><b>Prediction:</b> ${predictionTime}</p>
+                <p>${predictionTime} → ${expiryTime}</p>
 
-<p><b>Expiry:</b> ${expiryTime}</p>
-
-<p class="status">${p.result}</p>
-
-${
-    p.result === "PENDING"
-    ? `<p>Remaining:
-        <span id="timer-${p.id}"></span>
-       </p>`
-    : ""
-}
-
-</div>
-`;
-
-        });
-
-        if (predictions.length === 0) {
-            html = "No predictions";
+                <p class="status">${p.result}</p>
+            `;
         }
 
-        document.getElementById("activePredictions").innerHTML = html;
+        document.getElementById("slot1").innerHTML =
+            card(slot1, "🔵 NEXT");
 
-        predictions
-            .filter(p => p.result === "PENDING")
-            .forEach(p => {
+        document.getElementById("slot2").innerHTML =
+            card(slot2, "🟣 RUNNING");
 
-                startPredictionTimer(
-                    p.id,
-                    Number(p.expiry_time)
-                );
-
-            });
+        document.getElementById("slot3").innerHTML =
+            card(lastResult, "🏁 LAST RESULT");
 
     } catch (err) {
 
