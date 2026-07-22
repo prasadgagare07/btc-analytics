@@ -132,7 +132,12 @@ async function loadActivePredictions() {
         const slot2 = active[1] || null;
 
         const lastResult =
-            history.find(p => p.result !== "PENDING") || null;
+    history.find(
+        p =>
+            p.result === "WIN" ||
+            p.result === "LOSS" ||
+            p.result === "NO TRADE"
+    ) || null;
 
         function card(p,title){
 
