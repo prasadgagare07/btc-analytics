@@ -115,6 +115,8 @@ async function loadIndicators() {
         alert(err.message);
     }
 }
+
+
 async function loadPrediction() {
 
     try {
@@ -123,34 +125,38 @@ async function loadPrediction() {
         const data = await res.json();
 
         document.getElementById("signal").innerHTML =
-    data.signal ?? "-";
+            data.signal ?? "-";
 
-const signal = document.getElementById("signal");
+        const signal = document.getElementById("signal");
 
-signal.className = "";
+        signal.className = "";
 
-if (data.signal === "BUY")
-    signal.classList.add("buy");
+        if (data.signal === "BUY")
+            signal.classList.add("buy");
 
-else if (data.signal === "SELL")
-    signal.classList.add("sell");
+        else if (data.signal === "SELL")
+            signal.classList.add("sell");
 
-else
-    signal.classList.add("hold");
+        else
+            signal.classList.add("hold");
 
-       document.getElementById("confidenceBar").style.width =
-    (data.confidence ?? 0) + "%"; 
+        document.getElementById("confidence").innerHTML =
+            (data.confidence ?? 0) + "%";
 
-        const confidenceBar = document.getElementById("confidenceBar");
+        const confidenceBar =
+            document.getElementById("confidenceBar");
 
-if (data.signal === "BUY")
-    confidenceBar.style.background = "#00e676";
+        confidenceBar.style.width =
+            (data.confidence ?? 0) + "%";
 
-else if (data.signal === "SELL")
-    confidenceBar.style.background = "#ff5252";
+        if (data.signal === "BUY")
+            confidenceBar.style.background = "#00e676";
 
-else
-    confidenceBar.style.background = "#ffd600";
+        else if (data.signal === "SELL")
+            confidenceBar.style.background = "#ff5252";
+
+        else
+            confidenceBar.style.background = "#ffd600";
 
         document.getElementById("entry").innerHTML =
             data.entry ?? "-";
