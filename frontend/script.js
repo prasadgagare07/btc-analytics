@@ -44,23 +44,19 @@ async function loadstreaks() {
     const res = await fetch("/api/streaks");
     const data = await res.json();
 
-    document.getElementById("winStreak").innerHTML =
-        data.currentWin;
+    document.getElementById("currentStreaks").innerHTML =
+        `🟢 ${data.currentWin}
+         &nbsp;&nbsp;
+         🔴 ${data.currentLoss}
+         &nbsp;&nbsp;
+         🟡 ${data.currentNoTrade}`;
 
-    document.getElementById("lossStreak").innerHTML =
-        data.currentLoss;
-
-    document.getElementById("noTradeStreak").innerHTML =
-        data.currentNoTrade;
-
-    document.getElementById("maxWinStreak").innerHTML =
-        data.maxWin;
-
-    document.getElementById("maxLossStreak").innerHTML =
-        data.maxLoss;
-
-    document.getElementById("maxNoTradeStreak").innerHTML =
-        data.maxNoTrade;
+    document.getElementById("bestStreaks").innerHTML =
+        `🏆 ${data.maxWin}
+         &nbsp;&nbsp;
+         💀 ${data.maxLoss}
+         &nbsp;&nbsp;
+         ⏸ ${data.maxNoTrade}`;
 
 }
 
