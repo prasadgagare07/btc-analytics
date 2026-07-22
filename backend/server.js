@@ -189,14 +189,6 @@ app.get("/api/streaks", async (req, res) => {
     maxNoTrade = currentNoTrade;
 
 }
-
-            currentNoTrade++;
-
-            if (currentNoTrade > maxNoTrade)
-                maxNoTrade = currentNoTrade;
-
-        }
-
         // WIN breaks LOSS
         if (row.result === "WIN") {
             currentLoss = 0;
