@@ -93,7 +93,18 @@ background:#1976d2;
 .prediction-card h3{
     margin:0 0 8px;
 }
+#currentStreaks,
+#bestStreaks{
 
+font-size:18px;
+
+font-weight:bold;
+
+text-align:center;
+
+margin:8px 0;
+
+}
 .progress{
     width:100%;
     height:8px;
