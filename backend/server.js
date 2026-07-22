@@ -370,9 +370,15 @@ const losses=await db.query(
 "SELECT COUNT(*) FROM candle_predictions WHERE result='LOSS'"
 );
 
+const noTrades = await db.query(
+"SELECT COUNT(*) FROM candle_predictions WHERE result='NO TRADE'"
+);
+    
 const win=Number(wins.rows[0].count);
 
 const loss=Number(losses.rows[0].count);
+
+const noTrade = Number(noTrades.rows[0].count);
 
 const total=win+loss;
 
@@ -382,9 +388,10 @@ total===0
 :Number(((win/total)*100).toFixed(1));
 
 res.json({
-wins:win,
-losses:loss,
-rate
+    wins: win,
+    losses: loss,
+    noTrade: noTrade,
+    rate
 });
 
 });
