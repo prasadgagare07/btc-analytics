@@ -507,22 +507,9 @@ function startCountdown(expiryTime) {
 }
 
 async function refresh() {
-    await loadStatus();
-    await loadMarket();
-    await loadOrderBook();
-    await loadIndicators();
-    await loadPrediction();
+
     await loadActivePredictions();
-    await loadLiveBias();
-    await loadstreaks();
-    await loadProbability();
-    await loadTradeStats();
-    await loadLastTrades();
-    await loadAccuracy();
-    await loadOpenInterest();
-    await loadFunding();
-    await loadLiquidations();
-    await loadChart();
+
 }
 
 refresh();
