@@ -181,7 +181,14 @@ app.get("/api/streaks", async (req, res) => {
 
         }
 
-        else if (row.result === "NO TRADE") {
+        else if (row.result === "HOLD") {
+
+    currentNoTrade++;
+
+    if (currentNoTrade > maxNoTrade)
+    maxNoTrade = currentNoTrade;
+
+}
 
             currentNoTrade++;
 
