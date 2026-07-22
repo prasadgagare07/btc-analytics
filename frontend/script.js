@@ -27,10 +27,9 @@ async function loadMarket() {
     }
 }
 
-async function loadStreaks() {
+async function loadStreak() {
 
     const res = await fetch("/api/streaks");
-
     const data = await res.json();
 
     document.getElementById("winStreak").innerHTML =
@@ -41,6 +40,15 @@ async function loadStreaks() {
 
     document.getElementById("noTradeStreak").innerHTML =
         data.currentNoTrade;
+
+    document.getElementById("maxWinStreak").innerHTML =
+        data.maxWin;
+
+    document.getElementById("maxLossStreak").innerHTML =
+        data.maxLoss;
+
+    document.getElementById("maxNoTradeStreak").innerHTML =
+        data.maxNoTrade;
 
 }
 
