@@ -257,7 +257,7 @@ async function loadActivePredictions() {
                 new Date(Number(p.expiry_time)).toLocaleTimeString();
 
             return `
-                <h3>${title}</h3>
+                <h3 class="predictionTitle">${title}</h3>
 
                 <p><b>${p.signal}</b></p>
 
@@ -274,13 +274,13 @@ async function loadActivePredictions() {
         }
 
         document.getElementById("slot1").innerHTML =
-            card(slot1, "🔵 NEXT");
+    card(slot1, "🔵 NEW SIGNAL");
 
-        document.getElementById("slot2").innerHTML =
-            card(slot2, "🟣 RUNNING");
+document.getElementById("slot2").innerHTML =
+    card(slot2, "🟣 RUNNING");
 
-        document.getElementById("slot3").innerHTML =
-            card(lastResult, "🏁 LAST RESULT");
+document.getElementById("slot3").innerHTML =
+    card(lastResult, "🏁 PREVIOUS");
 
     } catch (err) {
 
