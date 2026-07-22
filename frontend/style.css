@@ -211,3 +211,48 @@ border-radius:10px;
 overflow:hidden;
 margin:10px 0;
 }
+
+#signal{
+
+animation:pulse 1.5s infinite;
+
+}
+
+.buy{
+
+color:#00ff66 !important;
+
+text-shadow:
+0 0 10px #00ff66,
+0 0 20px #00ff66;
+
+}
+
+.sell{
+
+color:#ff3b3b !important;
+
+text-shadow:
+0 0 10px #ff3b3b,
+0 0 20px #ff3b3b;
+
+}
+
+.hold{
+
+color:#ffd600 !important;
+
+text-shadow:
+0 0 10px #ffd600;
+
+}
+
+@keyframes pulse{
+
+0%{transform:scale(1);}
+
+50%{transform:scale(1.08);}
+
+100%{transform:scale(1);}
+
+}
