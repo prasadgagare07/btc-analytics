@@ -706,14 +706,24 @@ app.get("/api/candleprediction", (req, res) => {
 
     app.get("/api/candle-history", async (req, res) => {
 
-    const result = await db.query(`
-        SELECT *
-        FROM candle_predictions
-        ORDER BY prediction_time DESC
-        LIMIT 3
-    `);
+    try {
 
-    res.json(result.rows);
+        const result = await db.query(`
+            SELECT *
+            FROM candle_predictions
+            ORDER BY prediction_time DESC
+            LIMIT 20
+        `);
+
+        res.json(result.rows);
+
+    } catch (err) {
+
+        res.status(500).json({
+            error: err.message
+        });
+
+    }
 
 });
     
