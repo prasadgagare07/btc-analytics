@@ -27,6 +27,18 @@ async function loadMarket() {
     }
 }
 
+async function resetStats() {
+
+    await fetch("/api/reset-stats", {
+        method: "POST"
+    });
+
+    alert("Statistics reset!");
+
+    refresh();
+
+}
+
 async function loadstreaks() {
 
     const res = await fetch("/api/streaks");
